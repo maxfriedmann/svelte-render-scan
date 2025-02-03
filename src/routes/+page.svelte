@@ -2,8 +2,6 @@
 	import renderScan from '$lib/render-scan';
 	import { onMount } from 'svelte';
 	import pkg from '../../package.json';
-	//import 'prismjs';
-	//import 'prism-svelte';
 	import RenderScan from '$lib/components/RenderScan.svelte';
 
 	onMount(() => {
@@ -52,7 +50,15 @@
 	function generateJoke() {
 		const level = Math.ceil((jokeLength / 100) * 5);
 		const levelJokes = jokes[level as keyof typeof jokes];
-		const randomJoke = levelJokes[Math.floor(Math.random() * levelJokes.length)];
+
+		// Filter out the current joke to get only different options
+		const availableJokes = levelJokes.filter((joke) => joke !== currentJoke);
+
+		// If somehow we ended up with no available jokes (shouldn't happen with 3 per level),
+		// just use all jokes for this level
+		const jokesToSelectFrom = availableJokes.length ? availableJokes : levelJokes;
+
+		const randomJoke = jokesToSelectFrom[Math.floor(Math.random() * jokesToSelectFrom.length)];
 		currentJoke = randomJoke;
 	}
 
