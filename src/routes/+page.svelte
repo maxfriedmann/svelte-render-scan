@@ -6,9 +6,32 @@
 	import 'prism-svelte';
 
 	// Interactive demo state
-	let overlayOpacity = $state(0.05);
 	let highlightColor = $state('#aa00ff');
-	let fadeOutDelay = $state(1000);
+	let jokeLength = $state(50);
+
+	// Joke generation
+	let currentJoke = $state(
+		'Why did the Svelte component go to therapy? It had too many reactive issues!'
+	);
+	const jokes = [
+		'Why did the Svelte component go to therapy? It had too many reactive issues!',
+		'What does a Svelte dev say at a restaurant? "Can I get that state to go?"',
+		'How do Svelte components stay in shape? They do reactive training!',
+		'Why was the Svelte app feeling lonely? It had no props to talk to!',
+		"What's a Svelte developer's favorite drink? Component punch!"
+	];
+
+	function generateJoke() {
+		// Use jokeLength to determine how "complex" the joke is (i.e., which ones to pick from)
+		const eligibleJokes = jokes.filter(
+			(joke) =>
+				(jokeLength < 33 && joke.length < 50) ||
+				(jokeLength < 66 && joke.length < 75) ||
+				jokeLength >= 66
+		);
+		const randomJoke = eligibleJokes[Math.floor(Math.random() * eligibleJokes.length)];
+		currentJoke = randomJoke || jokes[0];
+	}
 
 	// Initialize render-scan for the demo
 	onMount(() => {
@@ -49,7 +72,8 @@
 				Svelte
 			</div>
 			<div
-				class="rotate-3 rounded-xl bg-[#aa00ff] p-4 text-xl font-extrabold uppercase tracking-widest shadow-lg md:text-2xl"
+				class="rotate-3 rounded-xl p-4 text-xl font-extrabold uppercase tracking-widest shadow-lg md:text-2xl"
+				style="background-color: {highlightColor}"
 			>
 				Render
 			</div>
@@ -67,39 +91,48 @@
 
 		<!-- Interactive Demo Section -->
 		<div class="mt-10 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-			<h2 class="mb-4 text-lg font-bold">Try the controls below to see updates</h2>
+			<h2 class="mb-4 text-lg font-bold">Customize Your Experience</h2>
 
 			<div class="space-y-6">
-				<!-- Opacity Slider -->
-				<div class="space-y-2">
-					<label class="font-medium">Overlay Opacity: {overlayOpacity}</label>
-					<input
-						type="range"
-						bind:value={overlayOpacity}
-						min="0"
-						max="0.2"
-						step="0.01"
-						class="w-full"
-					/>
-				</div>
-
 				<!-- Color Picker -->
 				<div class="flex items-center justify-between">
 					<label class="font-medium">Highlight Color</label>
 					<input type="color" bind:value={highlightColor} class="h-8 w-12" />
 				</div>
 
-				<!-- Fade Out Delay -->
-				<div class="space-y-2">
-					<label class="font-medium">Fade Out Delay: {fadeOutDelay}ms</label>
-					<input
-						type="range"
-						bind:value={fadeOutDelay}
-						min="0"
-						max="3000"
-						step="100"
-						class="w-full"
-					/>
+				<!-- Joke Section -->
+				<div class="space-y-4">
+					<button
+						on:click={generateJoke}
+						class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-5 w-5"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
+								clip-rule="evenodd"
+							/>
+						</svg>
+						<span>Generate Debug Joke</span>
+					</button>
+					<p class="italic text-gray-700">"{currentJoke}"</p>
+					<div class="space-y-2">
+						<label class="font-medium">Joke Complexity: {jokeLength}%</label>
+						<input
+							type="range"
+							bind:value={jokeLength}
+							min="0"
+							max="100"
+							step="1"
+							class="w-full"
+							style="--thumb-color: {highlightColor}"
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -113,7 +146,7 @@
 						height="24"
 						viewBox="0 0 24 24"
 						fill="none"
-						stroke="#aa00ff"
+						stroke={highlightColor}
 						stroke-width="2"
 						stroke-linecap="round"
 						stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
@@ -139,7 +172,9 @@
 							value={i.name}
 							bind:group={installer}
 						/>
-						{i.name}
+						<span style="background-color: {i.name === installer ? highlightColor : ''}"
+							>{i.name}</span
+						>
 					</label>
 				{/each}
 			</div>
@@ -182,7 +217,11 @@
 	}
 
 	label.checked {
-		@apply bg-gray-200 font-bold;
+		@apply font-bold;
+	}
+
+	label.checked span {
+		@apply rounded-full px-3 py-1 text-white;
 	}
 
 	input[type='range'] {
@@ -190,7 +229,8 @@
 	}
 
 	input[type='range']::-webkit-slider-thumb {
-		@apply h-4 w-4 cursor-pointer appearance-none rounded-full bg-[#aa00ff];
+		@apply h-4 w-4 cursor-pointer appearance-none rounded-full;
+		background-color: var(--thumb-color, #aa00ff);
 	}
 
 	input[type='color'] {
