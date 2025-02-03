@@ -79,8 +79,8 @@ class Highlight {
 		return `x${total} | ${reasons}`;
 	}
 
-	#fadeOut: NodeJS.Timeout;
-	#frame: number;
+	#fadeOut: ReturnType<typeof setTimeout> = setTimeout(() => {}, 0);
+	#frame: number = 0;
 	#render() {
 		cancelAnimationFrame(this.#frame);
 		clearTimeout(this.#fadeOut);
@@ -88,8 +88,8 @@ class Highlight {
 			let rect = this.#getRect();
 
 			if (!rect) return;
-			if (rect.top > window.innerHeight) return;
-			if (rect.left > window.innerWidth) return;
+			if (rect.y > window.innerHeight) return;
+			if (rect.x > window.innerWidth) return;
 
 			if (!overlay.contains(this.#element)) {
 				overlay.appendChild(this.#element);
@@ -181,9 +181,11 @@ let mutationObserver = new MutationObserver((mutationList, observer) => {
 	}
 });
 
-mutationObserver.observe(body, {
-	subtree: true,
-	childList: true,
-	attributes: true,
-	characterData: true
-});
+export default function renderScan() {
+	mutationObserver.observe(body, {
+		subtree: true,
+		childList: true,
+		attributes: true,
+		characterData: true
+	});
+}
