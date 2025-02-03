@@ -1,7 +1,15 @@
-let overlay = document.createElement('div');
-let px = 'px';
-let body = document.body;
-let styles = `
+// TODO: Make compatible with non-SvelteKit environments
+import { browser } from '$app/environment';
+
+export default function renderScan() {
+	if (!browser) {
+		return;
+	}
+
+	let overlay = document.createElement('div');
+	let px = 'px';
+	let body = document.body;
+	let styles = `
   .render-perf__container {
     position: fixed;
     pointer-events: none;
@@ -38,83 +46,102 @@ let styles = `
     }
   }
 `;
-let sheet = document.createElement('style');
-sheet.innerHTML = styles;
-overlay.appendChild(sheet);
-overlay.classList.add('render-perf__container');
-body.appendChild(overlay);
+	let sheet = document.createElement('style');
+	sheet.innerHTML = styles;
+	overlay.appendChild(sheet);
+	overlay.classList.add('render-perf__container');
+	body.appendChild(overlay);
 
-class Highlight {
-	#element: HTMLDivElement;
-	#title: HTMLDivElement;
-	target: Node;
-	constructor(target: Node) {
-		this.target = target;
+	class Highlight {
+		#element: HTMLDivElement;
+		#title: HTMLDivElement;
+		target: Node;
+		constructor(target: Node) {
+			this.target = target;
 
-		this.#element = document.createElement('div');
-		this.#title = document.createElement('div');
-		this.#element.classList.add('render-perf__box');
-		this.#title.classList.add('render-perf__title');
-		this.#element.appendChild(this.#title);
-	}
+			this.#element = document.createElement('div');
+			this.#title = document.createElement('div');
+			this.#element.classList.add('render-perf__box');
+			this.#title.classList.add('render-perf__title');
+			this.#element.appendChild(this.#title);
+		}
 
-	#reasons = new Map<string, number>();
-	#totalRerenders = 0;
+		#reasons = new Map<string, number>();
+		#totalRerenders = 0;
 
-	notify(why: string) {
-		this.#reasons.set(why, (this.#reasons.get(why) || 0) + 1);
-		this.#totalRerenders++;
+		notify(why: string) {
+			this.#reasons.set(why, (this.#reasons.get(why) || 0) + 1);
+			this.#totalRerenders++;
 
-		this.#render();
-	}
+			this.#render();
+		}
 
-	get title() {
-		let reasons = [...this.#reasons.entries()]
-			.map(([key, count]) => `${key} (${count})`)
-			.join(' , ');
-		let total = 0;
+		get title() {
+			let reasons = [...this.#reasons.entries()]
+				.map(([key, count]) => `${key} (${count})`)
+				.join(' , ');
+			let total = 0;
 
-		this.#reasons.values().forEach((x) => (total += x));
+			this.#reasons.values().forEach((x) => (total += x));
 
-		return `x${total} | ${reasons}`;
-	}
+			return `x${total} | ${reasons}`;
+		}
 
-	#fadeOut: ReturnType<typeof setTimeout> = setTimeout(() => {}, 0);
-	#frame: number = 0;
-	#render() {
-		cancelAnimationFrame(this.#frame);
-		clearTimeout(this.#fadeOut);
-		this.#frame = requestAnimationFrame(() => {
-			let rect = this.#getRect();
+		#fadeOut: ReturnType<typeof setTimeout> = setTimeout(() => {}, 0);
+		#frame: number = 0;
+		#render() {
+			cancelAnimationFrame(this.#frame);
+			clearTimeout(this.#fadeOut);
+			this.#frame = requestAnimationFrame(() => {
+				let rect = this.#getRect();
 
-			if (!rect) return;
-			if (rect.y > window.innerHeight) return;
-			if (rect.x > window.innerWidth) return;
+				if (!rect) return;
+				console.log(rect);
+				if (rect.y > window.innerHeight) return;
+				if (rect.x > window.innerWidth) return;
 
-			if (!overlay.contains(this.#element)) {
-				overlay.appendChild(this.#element);
+				if (!overlay.contains(this.#element)) {
+					overlay.appendChild(this.#element);
+				}
+
+				this.#title.textContent = this.title;
+
+				Object.assign(this.#element.style, {
+					top: rect.y + px,
+					left: rect.x + px,
+					width: rect.width + px,
+					height: rect.height + px
+				});
+
+				this.#element.style.opacity = '1';
+				this.#fadeOut = setTimeout(() => {
+					this.#element.style.opacity = '0';
+					this.#reasons.clear();
+				}, 1000);
+			});
+		}
+
+		#getRect() {
+			if (this.target instanceof Element) {
+				let rect = this.target.getBoundingClientRect();
+
+				return {
+					x: rect.x,
+					y: rect.y,
+					width: rect.width,
+					height: rect.height
+				};
 			}
 
-			this.#title.textContent = this.title;
+			let range = document.createRange();
+			range.selectNodeContents(this.target);
+			let rects = range.getClientRects();
+			let rect = rects[0];
 
-			Object.assign(this.#element.style, {
-				top: rect.y + px,
-				left: rect.x + px,
-				width: rect.width + px,
-				height: rect.height + px
-			});
-
-			this.#element.style.opacity = '1';
-			this.#fadeOut = setTimeout(() => {
-				this.#element.style.opacity = '0';
-				this.#reasons.clear();
-			}, 1000);
-		});
-	}
-
-	#getRect() {
-		if (this.target instanceof Element) {
-			let rect = this.target.getBoundingClientRect();
+			if (!rect) {
+				console.log(`Could not determine coordinates of `, this.target);
+				return;
+			}
 
 			return {
 				x: rect.x,
@@ -123,65 +150,46 @@ class Highlight {
 				height: rect.height
 			};
 		}
+	}
 
-		let range = document.createRange();
-		range.selectNodeContents(this.target);
-		let rects = range.getClientRects();
-		let rect = rects[0];
+	let cache = new WeakMap<Node, Highlight>();
+	function highlightNode(element: Node, why: string) {
+		let existing = cache.get(element);
 
-		if (!rect) {
-			console.log(`Could not determine coordinates of `, this.target);
-			return;
+		if (!existing) {
+			existing = new Highlight(element);
+			cache.set(element, existing);
 		}
 
-		return {
-			x: rect.x,
-			y: rect.y,
-			width: rect.width,
-			height: rect.height
-		};
-	}
-}
-
-let cache = new WeakMap<Node, Highlight>();
-function highlightNode(element: Node, why: string) {
-	let existing = cache.get(element);
-
-	if (!existing) {
-		existing = new Highlight(element);
-		cache.set(element, existing);
+		existing.notify(why);
 	}
 
-	existing.notify(why);
-}
+	let mutationObserver = new MutationObserver((mutationList, observer) => {
+		for (let mutation of mutationList) {
+			if (mutation.target instanceof Element) {
+				let shouldIgnore = mutation.target.getAttribute('class')?.includes('render-perf__');
 
-let mutationObserver = new MutationObserver((mutationList, observer) => {
-	for (let mutation of mutationList) {
-		if (mutation.target instanceof Element) {
-			let shouldIgnore = mutation.target.getAttribute('class')?.includes('render-perf__');
+				if (shouldIgnore) {
+					continue;
+				}
+			}
 
-			if (shouldIgnore) {
-				continue;
+			switch (mutation.type) {
+				case 'attributes':
+					highlightNode(mutation.target, 'attribute changed');
+					break;
+				case 'childList':
+					highlightNode(mutation.target, 'children changed');
+					break;
+				case 'characterData':
+					highlightNode(mutation.target, 'text changed');
+					break;
+				default:
+					console.log(`Unhandled mutation type: ${mutation.type}`);
 			}
 		}
+	});
 
-		switch (mutation.type) {
-			case 'attributes':
-				highlightNode(mutation.target, 'attribute changed');
-				break;
-			case 'childList':
-				highlightNode(mutation.target, 'children changed');
-				break;
-			case 'characterData':
-				highlightNode(mutation.target, 'text changed');
-				break;
-			default:
-				console.log(`Unhandled mutation type: ${mutation.type}`);
-		}
-	}
-});
-
-export default function renderScan() {
 	mutationObserver.observe(body, {
 		subtree: true,
 		childList: true,

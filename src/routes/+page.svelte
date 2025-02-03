@@ -1,5 +1,10 @@
 <script lang="ts">
 	import renderScan from '$lib/render-scan';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		renderScan();
+	});
 	// Form state
 	let name = $state('');
 	let age = $state(25);
