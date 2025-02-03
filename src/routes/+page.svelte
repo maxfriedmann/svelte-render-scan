@@ -19,7 +19,28 @@
 	let bio = $state('');
 	let happiness = $state(50);
 
-	// Derived values
+	// Derived visual effects
+	let nameRepeated = $derived(name.repeat(Math.floor(happiness / 20)));
+	let ageSquares = $derived(Array.from({ length: age }, (_, i) => i));
+	let happinessEmoji = $derived.by(() => {
+		if (happiness < 20) return '😢';
+		if (happiness < 40) return '😕';
+		if (happiness < 60) return '😐';
+		if (happiness < 80) return '😊';
+		return '😁';
+	});
+	let skillSymbols = $derived.by(() => {
+		const symbols = {
+			beginner: '🌱',
+			intermediate: '🌿',
+			advanced: '🌳',
+			expert: '🎓'
+		};
+		return symbols[programmingLevel as keyof typeof symbols] || '🌱';
+	});
+	let notificationCount = $derived(Object.values(notifications).filter(Boolean).length);
+
+	// Derived summary for display
 	let formSummary = $derived({
 		name,
 		age,
@@ -58,18 +79,34 @@
 		<div class="form-group">
 			<label for="name">Name:</label>
 			<input type="text" id="name" bind:value={name} placeholder="Enter your name" />
+			<div class="visual-feedback" style="font-size: {Math.min(happiness / 2 + 50, 150)}%">
+				{nameRepeated || 'Type your name...'}
+			</div>
 		</div>
 
 		<!-- Number input -->
 		<div class="form-group">
 			<label for="age">Age:</label>
 			<input type="number" id="age" bind:value={age} min="0" max="150" />
+			<div class="visual-feedback squares">
+				{#each ageSquares as square}
+					<div
+						class="square"
+						style="background-color: {favoriteColor}; transform: rotate({happiness}deg);"
+					/>
+				{/each}
+			</div>
 		</div>
 
 		<!-- Color picker -->
 		<div class="form-group">
 			<label for="color">Favorite Color:</label>
 			<input type="color" id="color" bind:value={favoriteColor} />
+			<div class="visual-feedback" style="color: {favoriteColor}; font-size: 2rem;">
+				{#each Array(3) as _}
+					<span style="opacity: {happiness / 100}">★</span>
+				{/each}
+			</div>
 		</div>
 
 		<!-- Radio buttons -->
@@ -81,6 +118,12 @@
 						<input type="radio" name="level" value={level.value} bind:group={programmingLevel} />
 						{level.label}
 					</label>
+				{/each}
+			</div>
+			<div class="visual-feedback">
+				<span style="font-size: 2rem;">{skillSymbols}</span>
+				{#each Array(skillLevels.findIndex((l) => l.value === programmingLevel) + 1) as _}
+					<span class="growth-indicator">↗️</span>
 				{/each}
 			</div>
 		</div>
@@ -102,6 +145,11 @@
 					Push
 				</label>
 			</div>
+			<div class="visual-feedback">
+				{#each Array(notificationCount) as _}
+					<span class="notification-indicator">🔔</span>
+				{/each}
+			</div>
 		</div>
 
 		<!-- Multiple select -->
@@ -115,18 +163,38 @@
 					</label>
 				{/each}
 			</div>
+			<div class="visual-feedback interests">
+				{#each interests as interest}
+					<span
+						class="interest-tag"
+						style="background-color: {favoriteColor}; opacity: {happiness / 100};"
+					>
+						{interest}
+					</span>
+				{/each}
+			</div>
 		</div>
 
 		<!-- Range slider -->
 		<div class="form-group">
-			<label for="happiness">Happiness Level: {happiness}%</label>
+			<label for="happiness">Happiness Level: {happiness}% {happinessEmoji}</label>
 			<input type="range" id="happiness" bind:value={happiness} min="0" max="100" step="1" />
+			<div class="visual-feedback">
+				<div
+					class="happiness-bar"
+					style="width: {happiness}%; background-color: {favoriteColor};"
+				/>
+			</div>
 		</div>
 
 		<!-- Textarea -->
 		<div class="form-group">
 			<label for="bio">Bio:</label>
-			<textarea id="bio" bind:value={bio} rows="4" placeholder="Tell us about yourself"></textarea>
+			<textarea id="bio" bind:value={bio} rows="4" placeholder="Tell us about yourself" />
+			<div class="visual-feedback bio-stats">
+				<span>Characters: {bio.length}</span>
+				<span>Words: {bio.trim() ? bio.trim().split(/\s+/).length : 0}</span>
+			</div>
 		</div>
 	</form>
 
@@ -154,7 +222,7 @@
 	}
 
 	.form-group {
-		margin-bottom: 1.5rem;
+		margin-bottom: 2.5rem;
 	}
 
 	label {
@@ -201,5 +269,55 @@
 	pre {
 		white-space: pre-wrap;
 		word-wrap: break-word;
+	}
+
+	.visual-feedback {
+		margin-top: 0.5rem;
+		min-height: 2rem;
+	}
+
+	.squares {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+	}
+
+	.square {
+		width: 10px;
+		height: 10px;
+		transition: transform 0.3s ease;
+	}
+
+	.happiness-bar {
+		height: 20px;
+		background-color: #ff3e00;
+		border-radius: 10px;
+		transition: width 0.3s ease;
+	}
+
+	.interest-tag {
+		display: inline-block;
+		padding: 0.25rem 0.5rem;
+		border-radius: 15px;
+		margin: 0.25rem;
+		color: white;
+		font-size: 0.875rem;
+	}
+
+	.notification-indicator {
+		font-size: 1.5rem;
+		margin-right: 0.5rem;
+	}
+
+	.growth-indicator {
+		display: inline-block;
+		margin-left: 0.25rem;
+	}
+
+	.bio-stats {
+		display: flex;
+		gap: 1rem;
+		color: #666;
+		font-size: 0.875rem;
 	}
 </style>
