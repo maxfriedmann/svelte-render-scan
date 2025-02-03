@@ -6,31 +6,48 @@
 	import 'prism-svelte';
 
 	// Interactive demo state
-	let highlightColor = $state('#aa00ff');
+	let highlightColor = $state('#2E8B57'); // Changed to Sea Green
 	let jokeLength = $state(50);
 
-	// Joke generation
+	// Joke generation with 5 levels, 3 jokes each
 	let currentJoke = $state(
 		'Why did the Svelte component go to therapy? It had too many reactive issues!'
 	);
-	const jokes = [
-		'Why did the Svelte component go to therapy? It had too many reactive issues!',
-		'What does a Svelte dev say at a restaurant? "Can I get that state to go?"',
-		'How do Svelte components stay in shape? They do reactive training!',
-		'Why was the Svelte app feeling lonely? It had no props to talk to!',
-		"What's a Svelte developer's favorite drink? Component punch!"
-	];
+	const jokes = {
+		1: [
+			// Shortest
+			'What is Svelte? Magic!',
+			'Svelte? Simply sweet!',
+			'Reactive? Effective!'
+		],
+		2: [
+			'Why use Svelte? Less code!',
+			'Svelte: Write less, do more!',
+			'Components love Svelte life!'
+		],
+		3: [
+			'What does a Svelte dev order? State management!',
+			'How do Svelte apps run? Reactively fast!',
+			'Svelte developers code less and smile more!'
+		],
+		4: [
+			'Why was the Svelte app feeling lonely? It had no props to talk to!',
+			'What does a Svelte dev say at a restaurant? "Can I get that state to go?"',
+			'How do Svelte components stay in shape? They do reactive training!'
+		],
+		5: [
+			// Longest
+			'Why did the Svelte component go to therapy? It had too many reactive issues!',
+			'What happened when the Svelte component lost its state? It had an identity crisis!',
+			'How many Svelte developers does it take to change a lightbulb? None, it reactively updates itself!'
+		]
+	};
 
 	function generateJoke() {
-		// Use jokeLength to determine how "complex" the joke is (i.e., which ones to pick from)
-		const eligibleJokes = jokes.filter(
-			(joke) =>
-				(jokeLength < 33 && joke.length < 50) ||
-				(jokeLength < 66 && joke.length < 75) ||
-				jokeLength >= 66
-		);
-		const randomJoke = eligibleJokes[Math.floor(Math.random() * eligibleJokes.length)];
-		currentJoke = randomJoke || jokes[0];
+		const level = Math.ceil((jokeLength / 100) * 5);
+		const levelJokes = jokes[level as keyof typeof jokes];
+		const randomJoke = levelJokes[Math.floor(Math.random() * levelJokes.length)];
+		currentJoke = randomJoke;
 	}
 
 	// Initialize render-scan for the demo
@@ -92,6 +109,7 @@
 		<!-- Interactive Demo Section -->
 		<div class="mt-10 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
 			<h2 class="mb-4 text-lg font-bold">Customize Your Experience</h2>
+			<p class="mb-6 italic text-gray-600">And see how the page reacts</p>
 
 			<div class="space-y-6">
 				<!-- Color Picker -->
@@ -102,27 +120,30 @@
 
 				<!-- Joke Section -->
 				<div class="space-y-4">
-					<button
-						on:click={generateJoke}
-						class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-5 w-5"
-							viewBox="0 0 20 20"
-							fill="currentColor"
+					<div class="flex justify-center">
+						<button
+							on:click={generateJoke}
+							class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow"
 						>
-							<path
-								fill-rule="evenodd"
-								d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
-								clip-rule="evenodd"
-							/>
-						</svg>
-						<span>Generate Debug Joke</span>
-					</button>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+							>
+								<path
+									fill-rule="evenodd"
+									d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
+									clip-rule="evenodd"
+								/>
+							</svg>
+							<span>Generate joke</span>
+						</button>
+					</div>
 					<p class="italic text-gray-700">"{currentJoke}"</p>
 					<div class="space-y-2">
-						<label class="font-medium">Joke Complexity: {jokeLength}%</label>
+						<label class="font-medium">Joke length: Level {Math.ceil((jokeLength / 100) * 5)}</label
+						>
 						<input
 							type="range"
 							bind:value={jokeLength}
@@ -230,7 +251,7 @@
 
 	input[type='range']::-webkit-slider-thumb {
 		@apply h-4 w-4 cursor-pointer appearance-none rounded-full;
-		background-color: var(--thumb-color, #aa00ff);
+		background-color: var(--thumb-color, #2e8b57);
 	}
 
 	input[type='color'] {
