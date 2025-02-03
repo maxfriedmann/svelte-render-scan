@@ -63,24 +63,19 @@
 
 	// Installation options
 	const installers = [
-		{ name: 'NPM', cmd: 'npm install svelte-render-scan' },
-		{ name: 'PNPM', cmd: 'pnpm install svelte-render-scan' },
-		{ name: 'Yarn', cmd: 'yarn add svelte-render-scan' },
-		{ name: 'Bun', cmd: 'bun add svelte-render-scan' }
+		{ name: 'NPM', cmd: 'npm install -D svelte-render-scan' },
+		{ name: 'PNPM', cmd: 'pnpm install -D svelte-render-scan' },
+		{ name: 'Yarn', cmd: 'yarn add -D svelte-render-scan' },
+		{ name: 'Bun', cmd: 'bun add svelte-render-scan -d' }
 	];
 	let installer = $state(installers[0].name);
 
 	// Demo code snippet
 	const demoCode = `<script>
-  import renderScan from 'svelte-render-scan';
-  import { onMount } from 'svelte';
-
-  onMount(() => {
-    renderScan();
-  });
+  import { RenderScan } from 'svelte-render-scan';
 <\/script>
 
-<!-- Your app code here -->
+<RenderScan />
 `;
 </script>
 
