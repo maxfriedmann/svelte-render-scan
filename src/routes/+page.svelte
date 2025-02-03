@@ -1,323 +1,212 @@
 <script lang="ts">
 	import renderScan from '$lib/render-scan';
 	import { onMount } from 'svelte';
+	import pkg from '../../package.json';
 
+	// Initialize render-scan for the demo
 	onMount(() => {
 		renderScan();
 	});
-	// Form state
-	let name = $state('');
-	let age = $state(25);
-	let favoriteColor = $state('#ff3e00');
-	let programmingLevel = $state('intermediate');
-	let notifications = $state({
-		email: true,
-		sms: false,
-		push: true
-	});
-	let interests = $state<string[]>([]);
-	let bio = $state('');
-	let happiness = $state(50);
 
-	// Derived visual effects
-	let nameRepeated = $derived(name.repeat(Math.floor(happiness / 20)));
-	let ageSquares = $derived(Array.from({ length: age }, (_, i) => i));
-	let happinessEmoji = $derived.by(() => {
-		if (happiness < 20) return '😢';
-		if (happiness < 40) return '😕';
-		if (happiness < 60) return '😐';
-		if (happiness < 80) return '😊';
-		return '😁';
-	});
-	let skillSymbols = $derived.by(() => {
-		const symbols = {
-			beginner: '🌱',
-			intermediate: '🌿',
-			advanced: '🌳',
-			expert: '🎓'
-		};
-		return symbols[programmingLevel as keyof typeof symbols] || '🌱';
-	});
-	let notificationCount = $derived(Object.values(notifications).filter(Boolean).length);
+	// Interactive demo state
+	let scanEnabled = $state(true);
+	let overlayOpacity = $state(0.05);
+	let highlightColor = $state('#aa00ff');
+	let fadeOutDelay = $state(1000);
 
-	// Derived summary for display
-	let formSummary = $derived({
-		name,
-		age,
-		favoriteColor,
-		programmingLevel,
-		notifications,
-		interests,
-		bio,
-		happiness
-	});
+	$inspect(highlightColor);
 
-	// Available options
-	const skillLevels = [
-		{ value: 'beginner', label: 'Beginner' },
-		{ value: 'intermediate', label: 'Intermediate' },
-		{ value: 'advanced', label: 'Advanced' },
-		{ value: 'expert', label: 'Expert' }
+	// Installation options
+	const installers = [
+		{ name: 'NPM', cmd: 'npm install svelte-render-scan' },
+		{ name: 'PNPM', cmd: 'pnpm install svelte-render-scan' },
+		{ name: 'Yarn', cmd: 'yarn add svelte-render-scan' },
+		{ name: 'Bun', cmd: 'bun add svelte-render-scan' }
 	];
+	let installer = $state(installers[0].name);
 
-	const interestOptions = [
-		'Frontend Development',
-		'Backend Development',
-		'DevOps',
-		'Machine Learning',
-		'Mobile Development',
-		'Game Development'
-	];
+	// Demo code snippet
+	const demoCode = `
+<script>
+  import renderScan from 'svelte-render-scan';
+  import { onMount } from 'svelte';
+
+  onMount(() => {
+    renderScan();
+  });
+<\/script>
+
+<!-- Your app code here -->
+`;
 </script>
 
-<main class="container">
-	<h1>Interactive Form Demo</h1>
-	<p>Experience fine-grained reactivity with Svelte 5</p>
-
-	<form class="form-container">
-		<!-- Text input -->
-		<div class="form-group">
-			<label for="name">Name:</label>
-			<input type="text" id="name" bind:value={name} placeholder="Enter your name" />
-			<div class="visual-feedback" style="font-size: {Math.min(happiness / 2 + 50, 150)}%">
-				{nameRepeated || 'Type your name...'}
+<div class="border-b-4 bg-[#faf6f4] py-24">
+	<div class="container mx-auto flex max-w-xl flex-col items-center text-center">
+		<div
+			class="mb-10 flex flex-col items-center space-y-3 text-white md:flex-row md:space-x-3 md:space-y-0"
+		>
+			<div
+				class="-rotate-2 rounded-xl bg-[#322f35] p-4 text-xl font-extrabold uppercase tracking-widest shadow-lg md:text-2xl"
+			>
+				Svelte
+			</div>
+			<div
+				class="rotate-3 rounded-xl bg-[#aa00ff] p-4 text-xl font-extrabold uppercase tracking-widest shadow-lg md:text-2xl"
+			>
+				Render
+			</div>
+			<div
+				class="-rotate-2 rounded-xl bg-[#322f35] p-4 text-xl font-extrabold uppercase tracking-widest shadow-lg md:text-2xl"
+			>
+				Scan
 			</div>
 		</div>
+		<h1 class="text-3xl font-bold md:text-5xl">Visual debugging for Svelte apps</h1>
+		<p class="mt-10 max-w-prose text-lg md:text-xl">
+			Watch your components update in real-time with beautiful overlays.<br />
+			Perfect for debugging reactivity and performance issues.
+		</p>
 
-		<!-- Number input -->
-		<div class="form-group">
-			<label for="age">Age:</label>
-			<input type="number" id="age" bind:value={age} min="0" max="150" />
-			<div class="visual-feedback squares">
-				{#each ageSquares as square}
-					<div
-						class="square"
-						style="background-color: {favoriteColor}; transform: rotate({happiness}deg);"
+		<!-- Interactive Demo Section -->
+		<div class="mt-10 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+			<h2 class="mb-4 text-lg font-bold">Try the controls below to see updates</h2>
+
+			<div class="space-y-6">
+				<!-- Enable/Disable Toggle -->
+				<div class="flex items-center justify-between">
+					<label class="font-medium">Enable Scanning</label>
+					<label class="relative inline-flex cursor-pointer items-center">
+						<input type="checkbox" bind:checked={scanEnabled} class="peer sr-only" />
+						<div
+							class="h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[#aa00ff] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"
+						></div>
+					</label>
+				</div>
+
+				<!-- Opacity Slider -->
+				<div class="space-y-2">
+					<label class="font-medium">Overlay Opacity: {overlayOpacity}</label>
+					<input
+						type="range"
+						bind:value={overlayOpacity}
+						min="0"
+						max="0.2"
+						step="0.01"
+						class="w-full"
 					/>
-				{/each}
+				</div>
+
+				<!-- Color Picker -->
+				<div class="flex items-center justify-between">
+					<label class="font-medium">Highlight Color</label>
+					<input type="color" bind:value={highlightColor} class="h-8 w-12" />
+				</div>
+
+				<!-- Fade Out Delay -->
+				<div class="space-y-2">
+					<label class="font-medium">Fade Out Delay: {fadeOutDelay}ms</label>
+					<input
+						type="range"
+						bind:value={fadeOutDelay}
+						min="0"
+						max="3000"
+						step="100"
+						class="w-full"
+					/>
+				</div>
 			</div>
 		</div>
 
-		<!-- Color picker -->
-		<div class="form-group">
-			<label for="color">Favorite Color:</label>
-			<input type="color" id="color" bind:value={favoriteColor} />
-			<div class="visual-feedback" style="color: {favoriteColor}; font-size: 2rem;">
-				{#each Array(3) as _}
-					<span style="opacity: {happiness / 100}">★</span>
-				{/each}
-			</div>
-		</div>
-
-		<!-- Radio buttons -->
-		<div class="form-group">
-			<label>Programming Level:</label>
-			<div class="radio-group">
-				{#each skillLevels as level}
-					<label class="radio-label">
-						<input type="radio" name="level" value={level.value} bind:group={programmingLevel} />
-						{level.label}
-					</label>
-				{/each}
-			</div>
-			<div class="visual-feedback">
-				<span style="font-size: 2rem;">{skillSymbols}</span>
-				{#each Array(skillLevels.findIndex((l) => l.value === programmingLevel) + 1) as _}
-					<span class="growth-indicator">↗️</span>
-				{/each}
-			</div>
-		</div>
-
-		<!-- Checkboxes -->
-		<div class="form-group">
-			<label>Notification Preferences:</label>
-			<div class="checkbox-group">
-				<label class="checkbox-label">
-					<input type="checkbox" bind:checked={notifications.email} />
-					Email
-				</label>
-				<label class="checkbox-label">
-					<input type="checkbox" bind:checked={notifications.sms} />
-					SMS
-				</label>
-				<label class="checkbox-label">
-					<input type="checkbox" bind:checked={notifications.push} />
-					Push
-				</label>
-			</div>
-			<div class="visual-feedback">
-				{#each Array(notificationCount) as _}
-					<span class="notification-indicator">🔔</span>
-				{/each}
-			</div>
-		</div>
-
-		<!-- Multiple select -->
-		<div class="form-group">
-			<label>Interests:</label>
-			<div class="checkbox-group">
-				{#each interestOptions as interest}
-					<label class="checkbox-label">
-						<input type="checkbox" value={interest} bind:group={interests} />
-						{interest}
-					</label>
-				{/each}
-			</div>
-			<div class="visual-feedback interests">
-				{#each interests as interest}
-					<span
-						class="interest-tag"
-						style="background-color: {favoriteColor}; opacity: {happiness / 100};"
+		<div class="mt-10 grid grid-cols-2 gap-4 self-stretch font-medium md:grid-cols-3">
+			{#each ['Real-time Updates', 'Customizable Colors', 'Fine-grained Control', 'Zero Config', 'Lightweight', 'TypeScript Support'] as feature}
+				<div class="flex space-x-2">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="#aa00ff"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
 					>
-						{interest}
-					</span>
+					<p>{feature}</p>
+				</div>
+			{/each}
+		</div>
+	</div>
+</div>
+
+<div class="container mx-auto max-w-2xl py-10">
+	<section>
+		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+			<p class="text-xl font-bold">1. Install</p>
+			<div class="space-x-1">
+				{#each installers as i}
+					<label for={i.name} class:checked={i.name === installer}>
+						<input
+							type="radio"
+							id={i.name}
+							name="installers"
+							value={i.name}
+							bind:group={installer}
+						/>
+						{i.name}
+					</label>
 				{/each}
 			</div>
 		</div>
-
-		<!-- Range slider -->
-		<div class="form-group">
-			<label for="happiness">Happiness Level: {happiness}% {happinessEmoji}</label>
-			<input type="range" id="happiness" bind:value={happiness} min="0" max="100" step="1" />
-			<div class="visual-feedback">
-				<div
-					class="happiness-bar"
-					style="width: {happiness}%; background-color: {favoriteColor};"
-				/>
+		{#each installers as i}
+			<div class:hidden={installer !== i.name}>
+				<code class="language-shell">
+					{i.cmd}
+				</code>
 			</div>
-		</div>
+		{/each}
+	</section>
 
-		<!-- Textarea -->
-		<div class="form-group">
-			<label for="bio">Bio:</label>
-			<textarea id="bio" bind:value={bio} rows="4" placeholder="Tell us about yourself" />
-			<div class="visual-feedback bio-stats">
-				<span>Characters: {bio.length}</span>
-				<span>Words: {bio.trim() ? bio.trim().split(/\s+/).length : 0}</span>
-			</div>
-		</div>
-	</form>
+	<section class="mt-10">
+		<p class="mb-4 text-xl font-bold">2. Mount and use</p>
+		<pre class="language-html"><code>{demoCode}</code></pre>
+	</section>
 
-	<!-- Live form data display -->
-	<div class="form-data">
-		<h2>Live Form Data:</h2>
-		<pre>{JSON.stringify(formSummary, null, 2)}</pre>
-	</div>
-</main>
+	<p class="mb-2 mt-24 text-center">
+		<a href="https://github.com/yourusername/svelte-render-scan" class="underline">GitHub</a>
+	</p>
+	<p class="text-center text-gray-500">
+		© 2024 svelte-render-scan · Version {pkg.version}
+	</p>
+</div>
 
-<style>
-	.container {
-		max-width: 800px;
-		margin: 0 auto;
-		padding: 2rem;
+<style lang="postcss">
+	:not(pre) > code,
+	pre {
+		@apply block rounded-lg bg-gray-100 p-5;
 	}
 
-	h1 {
-		color: #ff3e00;
-		margin-bottom: 0.5rem;
-	}
-
-	.form-container {
-		margin-top: 2rem;
-	}
-
-	.form-group {
-		margin-bottom: 2.5rem;
+	input[type='radio'] {
+		@apply hidden appearance-none;
 	}
 
 	label {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: bold;
+		cursor: pointer;
+		@apply rounded-full px-3 py-1;
 	}
 
-	input[type='text'],
-	input[type='number'],
-	textarea {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-	}
-
-	.radio-group,
-	.checkbox-group {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.radio-label,
-	.checkbox-label {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		font-weight: normal;
+	label.checked {
+		@apply bg-gray-200 font-bold;
 	}
 
 	input[type='range'] {
-		width: 100%;
+		@apply h-2 appearance-none rounded-lg bg-gray-200;
 	}
 
-	.form-data {
-		margin-top: 2rem;
-		padding: 1rem;
-		background-color: #f9f9f9;
-		border-radius: 4px;
+	input[type='range']::-webkit-slider-thumb {
+		@apply h-4 w-4 cursor-pointer appearance-none rounded-full bg-[#aa00ff];
 	}
 
-	pre {
-		white-space: pre-wrap;
-		word-wrap: break-word;
-	}
-
-	.visual-feedback {
-		margin-top: 0.5rem;
-		min-height: 2rem;
-	}
-
-	.squares {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 4px;
-	}
-
-	.square {
-		width: 10px;
-		height: 10px;
-		transition: transform 0.3s ease;
-	}
-
-	.happiness-bar {
-		height: 20px;
-		background-color: #ff3e00;
-		border-radius: 10px;
-		transition: width 0.3s ease;
-	}
-
-	.interest-tag {
-		display: inline-block;
-		padding: 0.25rem 0.5rem;
-		border-radius: 15px;
-		margin: 0.25rem;
-		color: white;
-		font-size: 0.875rem;
-	}
-
-	.notification-indicator {
-		font-size: 1.5rem;
-		margin-right: 0.5rem;
-	}
-
-	.growth-indicator {
-		display: inline-block;
-		margin-left: 0.25rem;
-	}
-
-	.bio-stats {
-		display: flex;
-		gap: 1rem;
-		color: #666;
-		font-size: 0.875rem;
+	input[type='color'] {
+		@apply cursor-pointer rounded border border-gray-200;
 	}
 </style>
