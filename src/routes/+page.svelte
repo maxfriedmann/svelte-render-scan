@@ -220,10 +220,10 @@
 	</section>
 
 	<p class="mb-2 mt-24 text-center">
-		<a href="https://github.com/yourusername/svelte-render-scan" class="underline">GitHub</a>
+		<a href="https://github.com/khromov/svelte-render-scan" class="underline">GitHub</a>
 	</p>
 	<p class="text-center text-gray-500">
-		© 2024 svelte-render-scan · Version {pkg.version}
+		© {new Date().getFullYear()} svelte-render-scan · Version {pkg.version}
 	</p>
 </div>
 
