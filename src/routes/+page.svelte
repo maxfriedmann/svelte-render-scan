@@ -2,12 +2,18 @@
 	import renderScan from '$lib/render-scan';
 	import { onMount } from 'svelte';
 	import pkg from '../../package.json';
-	import 'prismjs';
-	import 'prism-svelte';
+	//import 'prismjs';
+	//import 'prism-svelte';
+	import RenderScan from '$lib/components/RenderScan.svelte';
+
+	onMount(() => {
+		mounted = true;
+	});
 
 	// Interactive demo state
 	let highlightColor = $state('#2E8B57'); // Changed to Sea Green
 	let jokeLength = $state(50);
+	let mounted = $state(false);
 
 	// Joke generation with 5 levels, 3 jokes each
 	let currentJoke = $state(
@@ -50,11 +56,6 @@
 		currentJoke = randomJoke;
 	}
 
-	// Initialize render-scan for the demo
-	onMount(() => {
-		renderScan();
-	});
-
 	// Installation options
 	const installers = [
 		{ name: 'NPM', cmd: 'npm install svelte-render-scan' },
@@ -77,6 +78,10 @@
 <!-- Your app code here -->
 `;
 </script>
+
+{#if mounted}
+	<RenderScan />
+{/if}
 
 <div class="border-b-4 bg-[#faf6f4] py-24">
 	<div class="container mx-auto flex max-w-xl flex-col items-center text-center">
