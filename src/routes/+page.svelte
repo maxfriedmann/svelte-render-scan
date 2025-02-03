@@ -1,5 +1,4 @@
 <script lang="ts">
-	import renderScan from '$lib/render-scan';
 	import { onMount } from 'svelte';
 	import pkg from '../../package.json';
 	import RenderScan from '$lib/components/RenderScan.svelte';
