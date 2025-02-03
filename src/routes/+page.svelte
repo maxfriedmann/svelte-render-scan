@@ -127,7 +127,7 @@
 				<div class="space-y-4">
 					<div class="flex justify-center">
 						<button
-							on:click={generateJoke}
+							onclick={generateJoke}
 							class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow"
 						>
 							<svg
