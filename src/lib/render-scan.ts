@@ -45,9 +45,10 @@ overlay.classList.add('render-perf__container');
 body.appendChild(overlay);
 
 class Highlight {
-	#element;
-	#title;
-	constructor(target) {
+	#element: HTMLDivElement;
+	#title: HTMLDivElement;
+	target: Node;
+	constructor(target: Node) {
 		this.target = target;
 
 		this.#element = document.createElement('div');
@@ -57,10 +58,10 @@ class Highlight {
 		this.#element.appendChild(this.#title);
 	}
 
-	#reasons = new Map();
+	#reasons = new Map<string, number>();
 	#totalRerenders = 0;
 
-	notify(why) {
+	notify(why: string) {
 		this.#reasons.set(why, (this.#reasons.get(why) || 0) + 1);
 		this.#totalRerenders++;
 
@@ -78,8 +79,8 @@ class Highlight {
 		return `x${total} | ${reasons}`;
 	}
 
-	#fadeOut;
-	#frame;
+	#fadeOut: NodeJS.Timeout;
+	#frame: number;
 	#render() {
 		cancelAnimationFrame(this.#frame);
 		clearTimeout(this.#fadeOut);
@@ -103,9 +104,9 @@ class Highlight {
 				height: rect.height + px
 			});
 
-			this.#element.style.opacity = 1;
+			this.#element.style.opacity = '1';
 			this.#fadeOut = setTimeout(() => {
-				this.#element.style.opacity = 0;
+				this.#element.style.opacity = '0';
 				this.#reasons.clear();
 			}, 1000);
 		});
@@ -141,8 +142,9 @@ class Highlight {
 		};
 	}
 }
-let cache = new WeakMap();
-function highlightNode(element, why) {
+
+let cache = new WeakMap<Node, Highlight>();
+function highlightNode(element: Node, why: string) {
 	let existing = cache.get(element);
 
 	if (!existing) {
@@ -155,7 +157,7 @@ function highlightNode(element, why) {
 
 let mutationObserver = new MutationObserver((mutationList, observer) => {
 	for (let mutation of mutationList) {
-		if (typeof mutation.target.getAttribute === 'function') {
+		if (mutation.target instanceof Element) {
 			let shouldIgnore = mutation.target.getAttribute('class')?.includes('render-perf__');
 
 			if (shouldIgnore) {
