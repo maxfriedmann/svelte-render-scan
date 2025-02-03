@@ -2,19 +2,18 @@
 	import renderScan from '$lib/render-scan';
 	import { onMount } from 'svelte';
 	import pkg from '../../package.json';
+	import 'prismjs';
+	import 'prism-svelte';
+
+	// Interactive demo state
+	let overlayOpacity = $state(0.05);
+	let highlightColor = $state('#aa00ff');
+	let fadeOutDelay = $state(1000);
 
 	// Initialize render-scan for the demo
 	onMount(() => {
 		renderScan();
 	});
-
-	// Interactive demo state
-	let scanEnabled = $state(true);
-	let overlayOpacity = $state(0.05);
-	let highlightColor = $state('#aa00ff');
-	let fadeOutDelay = $state(1000);
-
-	$inspect(highlightColor);
 
 	// Installation options
 	const installers = [
@@ -26,8 +25,7 @@
 	let installer = $state(installers[0].name);
 
 	// Demo code snippet
-	const demoCode = `
-<script>
+	const demoCode = `<script>
   import renderScan from 'svelte-render-scan';
   import { onMount } from 'svelte';
 
@@ -72,17 +70,6 @@
 			<h2 class="mb-4 text-lg font-bold">Try the controls below to see updates</h2>
 
 			<div class="space-y-6">
-				<!-- Enable/Disable Toggle -->
-				<div class="flex items-center justify-between">
-					<label class="font-medium">Enable Scanning</label>
-					<label class="relative inline-flex cursor-pointer items-center">
-						<input type="checkbox" bind:checked={scanEnabled} class="peer sr-only" />
-						<div
-							class="h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[#aa00ff] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"
-						></div>
-					</label>
-				</div>
-
 				<!-- Opacity Slider -->
 				<div class="space-y-2">
 					<label class="font-medium">Overlay Opacity: {overlayOpacity}</label>
@@ -119,7 +106,7 @@
 
 		<div class="mt-10 grid grid-cols-2 gap-4 self-stretch font-medium md:grid-cols-3">
 			{#each ['Real-time Updates', 'Customizable Colors', 'Fine-grained Control', 'Zero Config', 'Lightweight', 'TypeScript Support'] as feature}
-				<div class="flex space-x-2">
+				<div class="flex space-x-2 text-left">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
@@ -168,7 +155,7 @@
 
 	<section class="mt-10">
 		<p class="mb-4 text-xl font-bold">2. Mount and use</p>
-		<pre class="language-html"><code>{demoCode}</code></pre>
+		<pre class="language-html"><code class="language-html">{demoCode}</code></pre>
 	</section>
 
 	<p class="mb-2 mt-24 text-center">
