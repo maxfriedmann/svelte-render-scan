@@ -1,23 +1,13 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { onMount, onDestroy } from 'svelte';
-
-	// Styles will be inlined as a scoped style block
-	const px = 'px';
+	import { browser } from '$app/environment';
 
 	class Highlight {
 		#element: HTMLDivElement;
 		#title: HTMLDivElement;
 		target: Node;
-		#reasons = new Map<string, number>();
-		#totalRerenders = 0;
-		#fadeOut: ReturnType<typeof setTimeout> = setTimeout(() => {}, 0);
-		#frame: number = 0;
-		#overlay: HTMLDivElement | null = null;
-
-		constructor(target: Node, overlay: HTMLDivElement) {
+		constructor(target: Node) {
 			this.target = target;
-			this.#overlay = overlay;
 
 			this.#element = document.createElement('div');
 			this.#title = document.createElement('div');
@@ -25,6 +15,9 @@
 			this.#title.classList.add('render-perf__title');
 			this.#element.appendChild(this.#title);
 		}
+
+		#reasons = new Map<string, number>();
+		#totalRerenders = 0;
 
 		notify(why: string) {
 			this.#reasons.set(why, (this.#reasons.get(why) || 0) + 1);
@@ -44,6 +37,8 @@
 			return `x${total} | ${reasons}`;
 		}
 
+		#fadeOut: ReturnType<typeof setTimeout> = setTimeout(() => {}, 0);
+		#frame: number = 0;
 		#render() {
 			cancelAnimationFrame(this.#frame);
 			clearTimeout(this.#fadeOut);
@@ -54,17 +49,17 @@
 				if (rect.y > window.innerHeight) return;
 				if (rect.x > window.innerWidth) return;
 
-				if (this.#overlay && !this.#overlay.contains(this.#element)) {
-					this.#overlay.appendChild(this.#element);
+				if (!overlayEl?.contains(this.#element)) {
+					overlayEl?.appendChild(this.#element);
 				}
 
 				this.#title.textContent = this.title;
 
 				Object.assign(this.#element.style, {
-					top: rect.y + px,
-					left: rect.x + px,
-					width: rect.width + px,
-					height: rect.height + px
+					top: rect.y + 'px',
+					left: rect.x + 'px',
+					width: rect.width + 'px',
+					height: rect.height + 'px'
 				});
 
 				this.#element.style.opacity = '1';
@@ -106,19 +101,15 @@
 		}
 	}
 
-	export let enabled = true;
-
-	let overlay: HTMLDivElement | null = null;
-	let cache = new WeakMap<Node, Highlight>();
+	let overlayEl: HTMLDivElement | null = null;
 	let mutationObserver: MutationObserver | null = null;
+	let cache = new WeakMap<Node, Highlight>();
 
 	function highlightNode(element: Node, why: string) {
-		if (!overlay) return;
-
 		let existing = cache.get(element);
 
 		if (!existing) {
-			existing = new Highlight(element, overlay);
+			existing = new Highlight(element);
 			cache.set(element, existing);
 		}
 
@@ -126,53 +117,10 @@
 	}
 
 	onMount(() => {
-		if (!browser || !enabled) return;
-
-		// Create overlay
-		overlay = document.createElement('div');
-		overlay.classList.add('render-perf__container');
-		document.body.appendChild(overlay);
-
-		// Create styles
-		let sheet = document.createElement('style');
-		sheet.innerHTML = `
-			.render-perf__container {
-				position: fixed;
-				pointer-events: none;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				box-sizing: border-box;
-				z-index: 1000000000;
-			}
-
-			.render-perf__container .render-perf__box {
-				box-sizing: border-box;
-				font-family: sans-serif;
-				display: block;
-				position: fixed;
-				pointer-events: none;
-				border: 1px solid #aa00ff;
-				background-color: rgba(200, 0, 255, 0.05);
-				transition: opacity 0.25s;
-			}
-
-			.render-perf__container .render-perf__box .render-perf__title {
-				display: inline-block;
-				min-width: max-content;
-				box-sizing: content-box;
-				font-size: 0.75rem;
-				border: 1px solid #aa00ff;
-				border-bottom: none;
-				padding: 0.125rem 0.5rem;
-				color: white;
-				background-color: rgba(100, 0, 200, 1);
-				position: relative;
-				top: -1.5rem;
-			}
-		`;
-		overlay.appendChild(sheet);
+		// Create overlay container
+		overlayEl = document.createElement('div');
+		overlayEl.classList.add('render-perf__container');
+		document.body.appendChild(overlayEl);
 
 		// Setup mutation observer
 		mutationObserver = new MutationObserver((mutationList) => {
@@ -201,7 +149,6 @@
 			}
 		});
 
-		// Start observing
 		mutationObserver.observe(document.body, {
 			subtree: true,
 			childList: true,
@@ -211,12 +158,48 @@
 	});
 
 	onDestroy(() => {
-		// Cleanup
-		if (mutationObserver) {
-			mutationObserver.disconnect();
-		}
-		if (overlay && overlay.parentNode) {
-			overlay.parentNode.removeChild(overlay);
-		}
+		mutationObserver?.disconnect();
+		overlayEl?.remove();
+		mutationObserver = null;
+		overlayEl = null;
+		cache = new WeakMap();
 	});
 </script>
+
+<style>
+	:global(.render-perf__container) {
+		position: fixed;
+		pointer-events: none;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		box-sizing: border-box;
+		z-index: 1000000000;
+	}
+
+	:global(.render-perf__box) {
+		box-sizing: border-box;
+		font-family: sans-serif;
+		display: block;
+		position: fixed;
+		pointer-events: none;
+		border: 1px solid #aa00ff;
+		background-color: rgba(200, 0, 255, 0.05);
+		transition: opacity 0.25s;
+	}
+
+	:global(.render-perf__title) {
+		display: inline-block;
+		min-width: max-content;
+		box-sizing: content-box;
+		font-size: 0.75rem;
+		border: 1px solid #aa00ff;
+		border-bottom: none;
+		padding: 0.125rem 0.5rem;
+		color: white;
+		background-color: rgba(100, 0, 200, 1);
+		position: relative;
+		top: -1.5rem;
+	}
+</style>
