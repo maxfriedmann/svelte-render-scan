@@ -39,9 +39,29 @@
 
 		#fadeOut: ReturnType<typeof setTimeout> = setTimeout(() => {}, 0);
 		#frame: number = 0;
+		#isVisible = false;
+
+		updatePosition() {
+			if (!this.#isVisible) return;
+
+			let rect = this.#getRect();
+			if (!rect) return;
+
+			if (rect.y > window.innerHeight) return;
+			if (rect.x > window.innerWidth) return;
+
+			Object.assign(this.#element.style, {
+				top: rect.y + 'px',
+				left: rect.x + 'px',
+				width: rect.width + 'px',
+				height: rect.height + 'px'
+			});
+		}
+
 		#render() {
 			cancelAnimationFrame(this.#frame);
 			clearTimeout(this.#fadeOut);
+
 			this.#frame = requestAnimationFrame(() => {
 				let rect = this.#getRect();
 
@@ -51,9 +71,11 @@
 
 				if (!overlayEl?.contains(this.#element)) {
 					overlayEl?.appendChild(this.#element);
+					activeHighlights.add(this);
 				}
 
 				this.#title.textContent = this.title;
+				this.#isVisible = true;
 
 				Object.assign(this.#element.style, {
 					top: rect.y + 'px',
@@ -66,6 +88,8 @@
 				this.#fadeOut = setTimeout(() => {
 					this.#element.style.opacity = '0';
 					this.#reasons.clear();
+					this.#isVisible = false;
+					activeHighlights.delete(this);
 				}, 1000);
 			});
 		}
@@ -104,6 +128,8 @@
 	let overlayEl: HTMLDivElement | null = null;
 	let mutationObserver: MutationObserver | null = null;
 	let cache = new WeakMap<Node, Highlight>();
+	let activeHighlights = new Set<Highlight>();
+	let scrollFrame: number = 0;
 
 	function highlightNode(element: Node, why: string) {
 		let existing = cache.get(element);
@@ -116,7 +142,20 @@
 		existing.notify(why);
 	}
 
+	function handleScroll() {
+		// Debounce scroll updates with requestAnimationFrame
+		cancelAnimationFrame(scrollFrame);
+		scrollFrame = requestAnimationFrame(() => {
+			// Update all visible highlights
+			activeHighlights.forEach((highlight) => {
+				highlight.updatePosition();
+			});
+		});
+	}
+
 	onMount(() => {
+		if (!browser) return;
+
 		// Create overlay container
 		overlayEl = document.createElement('div');
 		overlayEl.classList.add('render-perf__container');
@@ -155,14 +194,22 @@
 			attributes: true,
 			characterData: true
 		});
+
+		// Add scroll listener
+		window.addEventListener('scroll', handleScroll, { passive: true });
 	});
 
 	onDestroy(() => {
+		if (!browser) return;
+
 		mutationObserver?.disconnect();
 		overlayEl?.remove();
+		window.removeEventListener('scroll', handleScroll);
+		cancelAnimationFrame(scrollFrame);
 		mutationObserver = null;
 		overlayEl = null;
 		cache = new WeakMap();
+		activeHighlights.clear();
 	});
 </script>
 
