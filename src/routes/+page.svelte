@@ -12,6 +12,22 @@
 	let jokeLength = $state(50);
 	let mounted = $state(false);
 
+	// Calculate text color based on background brightness
+	function calculateBrightness(hexColor: string): number {
+		// Remove # if present
+		const color = hexColor.replace('#', '');
+		const r = parseInt(color.substr(0, 2), 16);
+		const g = parseInt(color.substr(2, 2), 16);
+		const b = parseInt(color.substr(4, 2), 16);
+		// Calculate perceived brightness using relative luminance
+		return (r * 299 + g * 587 + b * 114) / 1000;
+	}
+
+	let textColor = $derived.by(() => {
+		const brightness = calculateBrightness(highlightColor);
+		return brightness > 128 ? '#000000' : '#FFFFFF';
+	});
+
 	// Joke generation with 5 levels, 3 jokes each
 	let currentJoke = $state(
 		'Why did the Svelte component go to therapy? It had too many reactive issues!'
@@ -95,7 +111,7 @@
 			</div>
 			<div
 				class="rotate-3 rounded-xl p-4 text-xl font-extrabold uppercase tracking-widest shadow-lg md:text-2xl"
-				style="background-color: {highlightColor}"
+				style="background-color: {highlightColor}; color: {textColor}"
 			>
 				Render
 			</div>
@@ -198,8 +214,10 @@
 							value={i.name}
 							bind:group={installer}
 						/>
-						<span style="background-color: {i.name === installer ? highlightColor : ''}"
-							>{i.name}</span
+						<span
+							style="background-color: {i.name === installer
+								? highlightColor
+								: ''}; color: {i.name === installer ? textColor : ''}">{i.name}</span
 						>
 					</label>
 				{/each}
@@ -247,7 +265,7 @@
 	}
 
 	label.checked span {
-		@apply rounded-full px-3 py-1 text-white;
+		@apply rounded-full px-3 py-1;
 	}
 
 	input[type='range'] {
