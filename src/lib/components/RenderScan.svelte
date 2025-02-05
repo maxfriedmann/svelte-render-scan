@@ -154,8 +154,6 @@
 	}
 
 	onMount(() => {
-		if (!browser) return;
-
 		// Create overlay container
 		overlayEl = document.createElement('div');
 		overlayEl.classList.add('render-perf__container');
@@ -200,8 +198,6 @@
 	});
 
 	onDestroy(() => {
-		if (!browser) return;
-
 		mutationObserver?.disconnect();
 		overlayEl?.remove();
 		window.removeEventListener('scroll', handleScroll);
