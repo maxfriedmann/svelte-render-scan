@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Eye from '$lib/components/Logo.svelte';
 	import RenderScanObserver from './RenderScanObserver.svelte';
+	import { onMount } from 'svelte';
 
 	// Props with defaults
 	let { initialEnabled = true, offsetLeft = 0 } = $props<{
@@ -14,6 +15,20 @@
 	// Fixed colors for enabled/disabled states
 	const enabledColor = '#2189b5';
 	const disabledColor = '#9ca3af';
+
+	// Load saved state from localStorage on mount
+	onMount(() => {
+		const savedState = localStorage.getItem('svelte-render-scan-enabled');
+		if (savedState !== null) {
+			enabled = savedState === 'true';
+		}
+	});
+
+	// Toggle handler that also saves to localStorage
+	function toggleEnabled() {
+		enabled = !enabled;
+		localStorage.setItem('svelte-render-scan-enabled', enabled.toString());
+	}
 </script>
 
 {#if enabled}
@@ -24,7 +39,7 @@
 <button
 	style:background-color={enabled ? enabledColor : disabledColor}
 	style:right={`calc(1rem + ${offsetLeft}px)`}
-	onclick={() => (enabled = !enabled)}
+	onclick={toggleEnabled}
 	title={enabled ? 'Disable render scanning' : 'Enable render scanning'}
 >
 	<div class:enabled>
