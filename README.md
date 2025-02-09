@@ -1,8 +1,8 @@
-# svelte-render-scan
+# Svelte Render Scan
 
 Visual debugging tool for Svelte applications.
 
-![Screenshot of svelte-render-scan in action](screenshot.png)
+![Screenshot of svelte-render-scan in action](.github/render-scan-demo.gif)
 
 ## Installation
 
