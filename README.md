@@ -2,7 +2,7 @@
 
 Visual debugging tool for Svelte applications.
 
-Svelte port of [render-scan](https://github.com/NullVoxPopuli/render-scan//).
+Svelte port of [render-scan](https://github.com/NullVoxPopuli/render-scan/).
 
 ![Screenshot of svelte-render-scan in action](.github/render-scan-demo.gif)
 
