@@ -8,9 +8,10 @@
 	});
 
 	// Interactive demo state
-	let highlightColor = $state('#2E8B57'); // Changed to Sea Green
-	let jokeLength = $state(50);
+	let highlightColor = $state('#2189b5'); // Changed to Sea Green
 	let mounted = $state(false);
+	let boxes = $state<number[]>([]);
+	let maxBoxes = 3;
 
 	// Calculate text color based on background brightness
 	function calculateBrightness(hexColor: string): number {
@@ -28,53 +29,13 @@
 		return brightness > 128 ? '#000000' : '#FFFFFF';
 	});
 
-	// Joke generation with 5 levels, 3 jokes each
-	let currentJoke = $state(
-		'Why did the Svelte component go to therapy? It had too many reactive issues!'
-	);
-	const jokes = {
-		1: [
-			// Shortest
-			'What is Svelte? Magic!',
-			'Svelte? Simply sweet!',
-			'Reactive? Effective!'
-		],
-		2: [
-			'Why use Svelte? Less code!',
-			'Svelte: Write less, do more!',
-			'Components love Svelte life!'
-		],
-		3: [
-			'What does a Svelte dev order? State management!',
-			'How do Svelte apps run? Reactively fast!',
-			'Svelte developers code less and smile more!'
-		],
-		4: [
-			'Why was the Svelte app feeling lonely? It had no props to talk to!',
-			'What does a Svelte dev say at a restaurant? "Can I get that state to go?"',
-			'How do Svelte components stay in shape? They do reactive training!'
-		],
-		5: [
-			// Longest
-			'Why did the Svelte component go to therapy? It had too many reactive issues!',
-			'What happened when the Svelte component lost its state? It had an identity crisis!',
-			'How many Svelte developers does it take to change a lightbulb? None, it reactively updates itself!'
-		]
-	};
-
-	function generateJoke() {
-		const level = Math.ceil((jokeLength / 100) * 5);
-		const levelJokes = jokes[level as keyof typeof jokes];
-
-		// Filter out the current joke to get only different options
-		const availableJokes = levelJokes.filter((joke) => joke !== currentJoke);
-
-		// If somehow we ended up with no available jokes (shouldn't happen with 3 per level),
-		// just use all jokes for this level
-		const jokesToSelectFrom = availableJokes.length ? availableJokes : levelJokes;
-
-		const randomJoke = jokesToSelectFrom[Math.floor(Math.random() * jokesToSelectFrom.length)];
-		currentJoke = randomJoke;
+	async function demonstrateRendering() {
+		boxes = [];
+		// Add boxes one by one with a delay
+		for (let i = 0; i < maxBoxes; i++) {
+			await new Promise((resolve) => setTimeout(resolve, 800));
+			boxes = [...boxes, i];
+		}
 	}
 
 	// Installation options
@@ -139,11 +100,11 @@
 					<input type="color" bind:value={highlightColor} class="h-8 w-12" />
 				</div>
 
-				<!-- Joke Section -->
+				<!-- Demo Section -->
 				<div class="space-y-4">
 					<div class="flex justify-center">
 						<button
-							onclick={generateJoke}
+							onclick={demonstrateRendering}
 							class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow"
 						>
 							<svg
@@ -158,22 +119,17 @@
 									clip-rule="evenodd"
 								/>
 							</svg>
-							<span>Generate joke</span>
+							<span>See it in action</span>
 						</button>
 					</div>
-					<p class="italic text-gray-700">"{currentJoke}"</p>
-					<div class="space-y-2">
-						<label class="font-medium">Joke length: Level {Math.ceil((jokeLength / 100) * 5)}</label
-						>
-						<input
-							type="range"
-							bind:value={jokeLength}
-							min="0"
-							max="100"
-							step="1"
-							class="w-full"
-							style="--thumb-color: {highlightColor}"
-						/>
+					<!-- Demo Boxes -->
+					<div class="flex justify-center space-x-4">
+						{#each boxes as box (box)}
+							<div
+								class="h-16 w-16 rounded-lg transition-all duration-300"
+								style="background-color: {highlightColor}"
+							></div>
+						{/each}
 					</div>
 				</div>
 			</div>
@@ -266,15 +222,6 @@
 
 	label.checked span {
 		@apply rounded-full px-3 py-1;
-	}
-
-	input[type='range'] {
-		@apply h-2 appearance-none rounded-lg bg-gray-200;
-	}
-
-	input[type='range']::-webkit-slider-thumb {
-		@apply h-4 w-4 cursor-pointer appearance-none rounded-full;
-		background-color: var(--thumb-color, #2e8b57);
 	}
 
 	input[type='color'] {

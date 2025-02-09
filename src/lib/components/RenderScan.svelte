@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
 
 	class Highlight {
 		#element: HTMLDivElement;
@@ -148,6 +147,7 @@
 		scrollFrame = requestAnimationFrame(() => {
 			// Update all visible highlights
 			activeHighlights.forEach((highlight) => {
+				console.log('updating', highlight);
 				highlight.updatePosition();
 			});
 		});
@@ -227,7 +227,7 @@
 		display: block;
 		position: fixed;
 		pointer-events: none;
-		border: 1px solid #aa00ff;
+		border: 1px solid #2189b5;
 		background-color: rgba(200, 0, 255, 0.05);
 		transition: opacity 0.25s;
 	}
@@ -237,11 +237,11 @@
 		min-width: max-content;
 		box-sizing: content-box;
 		font-size: 0.75rem;
-		border: 1px solid #aa00ff;
+		border: 1px solid #2189b5;
 		border-bottom: none;
 		padding: 0.125rem 0.5rem;
 		color: white;
-		background-color: rgba(100, 0, 200, 1);
+		background-color: #2189b5;
 		position: relative;
 		top: -1.5rem;
 	}
