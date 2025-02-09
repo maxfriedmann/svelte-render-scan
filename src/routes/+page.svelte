@@ -86,21 +86,23 @@
 				Scan
 			</div>
 		</div>
-		<h1 class="text-3xl font-bold md:text-5xl">See Your Svelte App in Action</h1>
+		<h1 class="text-3xl font-bold md:text-5xl">Visual debugging for Svelte apps</h1>
 		<p class="mt-10 max-w-prose text-lg md:text-xl">
-			Understand exactly how your components update and re-render in real-time. Spot unnecessary
-			renders and optimize your app's performance with visual feedback.
+			Watch your components update in real-time. Perfect for debugging reactivity and performance
+			issues.
 		</p>
 
 		<!-- Interactive Demo Section -->
 		<div class="mt-10 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
 			<h2 class="mb-4 text-lg font-bold">See DOM Updates Live</h2>
-			<p class="mb-6 italic text-gray-600">Watch how components react to state changes</p>
+			<p class="mb-6 italic text-gray-600">
+				Try switching the highlight colors on this page below!
+			</p>
 
 			<div class="space-y-6">
 				<!-- Color Picker -->
 				<div class="flex items-center justify-between">
-					<label class="font-medium">Highlight Color</label>
+					<label class="font-medium">Page Highlight Color</label>
 					<input type="color" bind:value={highlightColor} class="h-8 w-12" />
 				</div>
 
@@ -124,7 +126,7 @@
 									clip-rule="evenodd"
 								/>
 							</svg>
-							<span>Try the demo</span>
+							<span>See it in action</span>
 						</button>
 					</div>
 					<!-- Demo Boxes -->
@@ -140,8 +142,8 @@
 			</div>
 		</div>
 
-		<div class="mt-10 grid grid-cols-2 gap-4 self-stretch font-medium md:grid-cols-3">
-			{#each ['Track DOM Updates', 'Debug Re-renders', 'Visual Feedback', 'Performance Insights', 'Development Tool', 'Easy Integration'] as feature}
+		<div class="mt-10 grid grid-cols-3 gap-4 self-stretch font-medium">
+			{#each ['Track DOM Updates', 'Debug Re-renders', 'Visual Feedback'] as feature}
 				<div class="flex space-x-2 text-left">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
