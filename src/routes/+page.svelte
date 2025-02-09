@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import pkg from '../../package.json';
-	import RenderScanOverlay from '$lib/components/RenderScanOverlay.svelte';
+	import RenderScan from '$lib/components/RenderScan.svelte';
 
 	onMount(() => {
 		mounted = true;
@@ -204,7 +204,7 @@
 	</p>
 
 	{#if mounted}
-		<RenderScanOverlay />
+		<RenderScan />
 	{/if}
 </div>
 
