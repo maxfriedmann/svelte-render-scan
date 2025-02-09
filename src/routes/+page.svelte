@@ -30,9 +30,9 @@
 	});
 
 	async function demonstrateRendering() {
-		boxes = [];
-		// Add boxes one by one with a delay
-		for (let i = 0; i < maxBoxes; i++) {
+		boxes = [0]; // Start with first box immediately
+		// Add remaining boxes one by one with a delay
+		for (let i = 1; i < maxBoxes; i++) {
 			await new Promise((resolve) => setTimeout(resolve, 800));
 			boxes = [...boxes, i];
 		}
