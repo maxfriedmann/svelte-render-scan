@@ -58,6 +58,16 @@
 
 <RenderScan />
 `;
+
+	// Advanced usage code snippets
+	const advancedCode = {
+		disable: `<RenderScan initialEnabled={false} />`,
+		offset: `<RenderScan offsetLeft={60} />`,
+		combined: `<RenderScan 
+  initialEnabled={false}
+  offsetLeft={60}
+/>`
+	};
 </script>
 
 <div class="border-b-4 bg-[#faf6f4] py-24">
@@ -131,7 +141,7 @@
 							<div
 								class="h-16 w-16 rounded-lg transition-all duration-300"
 								style="background-color: {highlightColor}"
-							></div>
+							/>
 						{/each}
 					</div>
 				</div>
@@ -194,6 +204,32 @@
 	<section class="mt-10">
 		<p class="mb-4 text-xl font-bold">2. Add to your app</p>
 		<pre class="language-html"><code class="language-html">{demoCode}</code></pre>
+	</section>
+
+	<section class="mt-16">
+		<h2 class="mb-6 text-xl font-bold">Advanced Usage</h2>
+
+		<div class="space-y-8">
+			<div>
+				<h3 class="mb-2 font-bold">Start Disabled</h3>
+				<p class="mb-3 text-gray-600">Start with render scanning disabled by default:</p>
+				<pre class="language-html"><code class="language-html">{advancedCode.disable}</code></pre>
+			</div>
+
+			<div>
+				<h3 class="mb-2 font-bold">Adjust Position</h3>
+				<p class="mb-3 text-gray-600">
+					Move the button left to avoid overlapping with other UI elements:
+				</p>
+				<pre class="language-html"><code class="language-html">{advancedCode.offset}</code></pre>
+			</div>
+
+			<div>
+				<h3 class="mb-2 font-bold">Combined Props</h3>
+				<p class="mb-3 text-gray-600">Use multiple props together:</p>
+				<pre class="language-html"><code class="language-html">{advancedCode.combined}</code></pre>
+			</div>
+		</div>
 	</section>
 
 	<p class="mb-2 mt-24 text-center">
