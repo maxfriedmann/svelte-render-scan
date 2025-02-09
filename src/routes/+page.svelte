@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Eye from 'lucide-svelte/icons/eye';
-	import pkg from '../../package.json';
+	import pkg from '../../package.json' assert { type: 'json' };
 	import RenderScan from '$lib/components/RenderScan.svelte';
 
 	// Interactive demo state
@@ -129,8 +129,8 @@
 			<div class="space-y-6">
 				<!-- Color Picker -->
 				<div class="flex items-center justify-between">
-					<label class="font-medium">Page Highlight Color</label>
-					<input type="color" bind:value={highlightColor} class="h-8 w-12" />
+					<label for="highlight-color" class="font-medium">Page Highlight Color</label>
+					<input type="color" id="highlight-color" bind:value={highlightColor} class="h-8 w-12" />
 				</div>
 
 				<!-- Demo Section -->
