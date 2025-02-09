@@ -231,7 +231,7 @@
 		position: fixed;
 		pointer-events: none;
 		border: 1px solid #2189b5;
-		background-color: rgba(200, 0, 255, 0.05);
+		background-color: rgba(33, 137, 181, 0.05);
 		transition: opacity 0.25s;
 	}
 
