@@ -1,7 +1,15 @@
 <script lang="ts">
+	import { Eye } from 'lucide-svelte';
 	import RenderScan from './RenderScan.svelte';
 
-	let enabled = $state(false);
+	// Props with defaults
+	let { initialEnabled = true, offsetLeft = 0 } = $props<{
+		initialEnabled?: boolean;
+		offsetLeft?: number;
+	}>();
+
+	// State management
+	let enabled = $state(initialEnabled);
 
 	// Fixed colors for enabled/disabled states
 	const enabledColor = '#2189b5';
@@ -16,25 +24,13 @@
 <button
 	class="fixed bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all hover:scale-110 active:scale-95"
 	style:background-color={enabled ? enabledColor : disabledColor}
+	style:right={`calc(1rem + ${offsetLeft}px)`}
 	on:click={() => (enabled = !enabled)}
 	title={enabled ? 'Disable render scanning' : 'Enable render scanning'}
 >
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="white"
-		stroke-width="2"
-		stroke-linecap="round"
-		stroke-linejoin="round"
-		class="transition-transform"
-		style:transform={enabled ? 'rotate(360deg)' : 'rotate(0deg)'}
-	>
-		<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-		<circle cx="12" cy="12" r="3" />
-	</svg>
+	<div class="transition-transform" style:transform={enabled ? 'rotate(360deg)' : 'rotate(0deg)'}>
+		<Eye color="white" size={24} />
+	</div>
 </button>
 
 <style>
@@ -45,7 +41,7 @@
 		z-index: 100000;
 	}
 
-	svg {
+	div {
 		transition: transform 0.5s ease;
 	}
 </style>

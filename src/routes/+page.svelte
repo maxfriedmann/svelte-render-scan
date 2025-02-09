@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import pkg from '../../package.json';
-	import RenderScan from '$lib/components/RenderScan.svelte';
 	import RenderScanOverlay from '$lib/components/RenderScanOverlay.svelte';
 
 	onMount(() => {
@@ -60,10 +59,6 @@
 <RenderScan />
 `;
 </script>
-
-{#if mounted}
-	<RenderScan />
-{/if}
 
 <div class="border-b-4 bg-[#faf6f4] py-24">
 	<div class="container mx-auto flex max-w-xl flex-col items-center text-center">
@@ -208,7 +203,9 @@
 		© {new Date().getFullYear()} svelte-render-scan · Version {pkg.version}
 	</p>
 
-	<RenderScanOverlay />
+	{#if mounted}
+		<RenderScanOverlay />
+	{/if}
 </div>
 
 <style lang="postcss">

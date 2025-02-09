@@ -195,17 +195,21 @@
 
 		// Add scroll listener
 		window.addEventListener('scroll', handleScroll, { passive: true });
-	});
 
-	onDestroy(() => {
-		mutationObserver?.disconnect();
-		overlayEl?.remove();
-		window.removeEventListener('scroll', handleScroll);
-		cancelAnimationFrame(scrollFrame);
-		mutationObserver = null;
-		overlayEl = null;
-		cache = new WeakMap();
-		activeHighlights.clear();
+		return () => {
+			mutationObserver?.disconnect();
+			overlayEl?.remove();
+
+			if (window) {
+				window.removeEventListener('scroll', handleScroll);
+			}
+
+			cancelAnimationFrame(scrollFrame);
+			mutationObserver = null;
+			overlayEl = null;
+			cache = new WeakMap();
+			activeHighlights.clear();
+		};
 	});
 </script>
 
