@@ -15,7 +15,7 @@
 	<meta property="og:url" content={SITE_URL} />
 	<meta property="og:title" content="Svelte Render Scan" />
 	<meta property="og:description" content="Visual debugging for Svelte apps." />
-	<meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+	<meta property="og:image" content={`${SITE_URL}og-image.jpg`} />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
 
