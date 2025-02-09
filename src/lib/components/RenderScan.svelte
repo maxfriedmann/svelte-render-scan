@@ -25,7 +25,7 @@
 	class="fixed bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all hover:scale-110 active:scale-95"
 	style:background-color={enabled ? enabledColor : disabledColor}
 	style:right={`calc(1rem + ${offsetLeft}px)`}
-	on:click={() => (enabled = !enabled)}
+	onclick={() => (enabled = !enabled)}
 	title={enabled ? 'Disable render scanning' : 'Enable render scanning'}
 >
 	<div class="transition-transform" style:transform={enabled ? 'rotate(360deg)' : 'rotate(0deg)'}>
