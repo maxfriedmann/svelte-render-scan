@@ -2,7 +2,7 @@
 	import '../app.css';
 	let { children } = $props();
 
-	const SITE_URL = 'https://khromov.github.io/svelte-render-scan';
+	const SITE_URL = 'https://khromov.github.io/svelte-render-scan/';
 </script>
 
 <svelte:head>
@@ -16,6 +16,8 @@
 	<meta property="og:title" content="Svelte Render Scan" />
 	<meta property="og:description" content="Visual debugging for Svelte apps." />
 	<meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
