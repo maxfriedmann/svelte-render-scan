@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Eye } from 'lucide-svelte';
 	import pkg from '../../package.json';
 	import RenderScan from '$lib/components/RenderScan.svelte';
 
@@ -13,6 +14,13 @@
 	let boxes = $state<number[]>([]);
 	let maxBoxes = 3;
 	let isAnimating = $state(false);
+	let logoVisible = $state(false);
+
+	// Animate logo after a small delay when component mounts
+	onMount(() => {
+		mounted = true;
+		logoVisible = true;
+	});
 
 	// Calculate text color based on background brightness
 	function calculateBrightness(hexColor: string): number {
@@ -70,8 +78,22 @@
 	};
 </script>
 
-<div class="border-b-4 bg-[#faf6f4] py-24">
+<div class="border-b-4 bg-[#faf6f4] py-12">
 	<div class="container mx-auto flex max-w-xl flex-col items-center text-center">
+		<!-- Logo Eye Icon -->
+		<div
+			class="mb-4 transition-all duration-700"
+			class:opacity-0={!logoVisible}
+			class:translate-y-4={!logoVisible}
+			style:color={highlightColor}
+		>
+			<Eye
+				size={128}
+				class="animate-[spin_1s_ease-in-out] hover:animate-[spin_1s_ease-in-out]"
+				strokeWidth={1.5}
+			/>
+		</div>
+
 		<div
 			class="mb-10 flex flex-col items-center space-y-3 text-white md:flex-row md:space-x-3 md:space-y-0"
 		>
@@ -269,5 +291,18 @@
 
 	input[type='color'] {
 		@apply cursor-pointer rounded border border-gray-200;
+	}
+
+	:global(.animate-\[spin_1s_ease-in-out\]) {
+		animation: spin 1s ease-in-out;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 </style>
