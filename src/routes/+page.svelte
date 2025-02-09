@@ -66,6 +66,14 @@
 <RenderScan />
 `;
 
+	const demoSvelteKitCode = `<script>
+	import { dev } from '$app/environment';
+	import { RenderScan } from 'svelte-render-scan';
+<\/script>
+
+{#if dev}
+	<RenderScan />
+{/if}`;
 	// Advanced usage code snippets
 	const advancedCode = {
 		disable: `<RenderScan initialEnabled={false} />`,
@@ -193,7 +201,7 @@
 <div class="container mx-auto max-w-2xl py-10">
 	<section>
 		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-			<p class="text-xl font-bold">1. Install in your Svelte project</p>
+			<p class="text-xl font-bold">Install</p>
 			<div class="space-x-1">
 				{#each installers as i}
 					<label for={i.name} class:checked={i.name === installer}>
@@ -223,7 +231,12 @@
 	</section>
 
 	<section class="mt-10">
-		<p class="mb-4 text-xl font-bold">2. Add to your app</p>
+		<p class="mb-4 text-xl font-bold">SvelteKit</p>
+		<pre class="language-html"><code class="language-html">{demoSvelteKitCode}</code></pre>
+	</section>
+
+	<section class="mt-10">
+		<p class="mb-4 text-xl font-bold">Vanilla Svelte</p>
 		<pre class="language-html"><code class="language-html">{demoCode}</code></pre>
 	</section>
 

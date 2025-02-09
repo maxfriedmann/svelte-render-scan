@@ -1,7 +1,12 @@
 {
 	"name": "svelte-render-scan",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"license": "MIT",
+	"homepage": "https://khromov.github.io/svelte-render-scan/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/khromov/svelte-render-scan.git"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
