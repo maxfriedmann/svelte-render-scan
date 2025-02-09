@@ -86,16 +86,16 @@
 				Scan
 			</div>
 		</div>
-		<h1 class="text-3xl font-bold md:text-5xl">Visual debugging for Svelte apps</h1>
+		<h1 class="text-3xl font-bold md:text-5xl">See Your Svelte App in Action</h1>
 		<p class="mt-10 max-w-prose text-lg md:text-xl">
-			Watch your components update in real-time with beautiful overlays.<br />
-			Perfect for debugging reactivity and performance issues.
+			Understand exactly how your components update and re-render in real-time. Spot unnecessary
+			renders and optimize your app's performance with visual feedback.
 		</p>
 
 		<!-- Interactive Demo Section -->
 		<div class="mt-10 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-			<h2 class="mb-4 text-lg font-bold">Customize Your Experience</h2>
-			<p class="mb-6 italic text-gray-600">And see how the page reacts</p>
+			<h2 class="mb-4 text-lg font-bold">See DOM Updates Live</h2>
+			<p class="mb-6 italic text-gray-600">Watch how components react to state changes</p>
 
 			<div class="space-y-6">
 				<!-- Color Picker -->
@@ -124,7 +124,7 @@
 									clip-rule="evenodd"
 								/>
 							</svg>
-							<span>See it in action</span>
+							<span>Try the demo</span>
 						</button>
 					</div>
 					<!-- Demo Boxes -->
@@ -133,7 +133,7 @@
 							<div
 								class="h-16 w-16 rounded-lg transition-all duration-300"
 								style="background-color: {highlightColor}"
-							></div>
+							/>
 						{/each}
 					</div>
 				</div>
@@ -141,7 +141,7 @@
 		</div>
 
 		<div class="mt-10 grid grid-cols-2 gap-4 self-stretch font-medium md:grid-cols-3">
-			{#each ['Real-time Updates', 'Customizable Colors', 'Fine-grained Control', 'Zero Config', 'Lightweight', 'TypeScript Support'] as feature}
+			{#each ['Track DOM Updates', 'Debug Re-renders', 'Visual Feedback', 'Performance Insights', 'Development Tool', 'Easy Integration'] as feature}
 				<div class="flex space-x-2 text-left">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@
 <div class="container mx-auto max-w-2xl py-10">
 	<section>
 		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-			<p class="text-xl font-bold">1. Install</p>
+			<p class="text-xl font-bold">1. Install in your Svelte project</p>
 			<div class="space-x-1">
 				{#each installers as i}
 					<label for={i.name} class:checked={i.name === installer}>
@@ -194,7 +194,7 @@
 	</section>
 
 	<section class="mt-10">
-		<p class="mb-4 text-xl font-bold">2. Mount and use</p>
+		<p class="mb-4 text-xl font-bold">2. Add to your app</p>
 		<pre class="language-html"><code class="language-html">{demoCode}</code></pre>
 	</section>
 
