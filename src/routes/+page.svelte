@@ -4,10 +4,6 @@
 	import pkg from '../../package.json';
 	import RenderScan from '$lib/components/RenderScan.svelte';
 
-	onMount(() => {
-		mounted = true;
-	});
-
 	// Interactive demo state
 	let highlightColor = $state('#2189b5'); // Changed to Sea Green
 	let mounted = $state(false);
@@ -18,7 +14,10 @@
 
 	// Animate logo after a small delay when component mounts
 	onMount(() => {
-		mounted = true;
+		// Delay the mounting of the render-scan component to avoid a flash on load
+		setTimeout(() => {
+			mounted = true;
+		}, 100);
 		logoVisible = true;
 	});
 
