@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { browser } from '$app/environment';
 
 	class Highlight {
 		#element: HTMLDivElement;
@@ -41,8 +42,6 @@
 		#isVisible = false;
 
 		updatePosition() {
-			if (!this.#isVisible) return;
-
 			let rect = this.#getRect();
 			if (!rect) return;
 
@@ -88,7 +87,11 @@
 					this.#element.style.opacity = '0';
 					this.#reasons.clear();
 					this.#isVisible = false;
-					activeHighlights.delete(this);
+					// Remove element from DOM after fade animation completes
+					setTimeout(() => {
+						this.#element.remove();
+						activeHighlights.delete(this);
+					}, 250); // Match the CSS transition duration
 				}, 1000);
 			});
 		}
@@ -142,12 +145,9 @@
 	}
 
 	function handleScroll() {
-		// Debounce scroll updates with requestAnimationFrame
 		cancelAnimationFrame(scrollFrame);
 		scrollFrame = requestAnimationFrame(() => {
-			// Update all visible highlights
 			activeHighlights.forEach((highlight) => {
-				console.log('updating', highlight);
 				highlight.updatePosition();
 			});
 		});

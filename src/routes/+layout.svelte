@@ -6,10 +6,7 @@
 <svelte:head>
 	<title>Svelte Render Scan</title>
 	<meta name="title" content="svelte-render-scan" />
-	<meta
-		name="description"
-		content="Visual debugging tool for Svelte applications. Watch your components update in real-time with beautiful overlays."
-	/>
+	<meta name="description" content="Visual debugging tool for Svelte applications." />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />

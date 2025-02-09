@@ -12,6 +12,7 @@
 	let mounted = $state(false);
 	let boxes = $state<number[]>([]);
 	let maxBoxes = 3;
+	let isAnimating = $state(false);
 
 	// Calculate text color based on background brightness
 	function calculateBrightness(hexColor: string): number {
@@ -30,12 +31,15 @@
 	});
 
 	async function demonstrateRendering() {
+		if (isAnimating) return;
+		isAnimating = true;
 		boxes = [0]; // Start with first box immediately
 		// Add remaining boxes one by one with a delay
 		for (let i = 1; i < maxBoxes; i++) {
 			await new Promise((resolve) => setTimeout(resolve, 800));
 			boxes = [...boxes, i];
 		}
+		isAnimating = false;
 	}
 
 	// Installation options
@@ -105,7 +109,8 @@
 					<div class="flex justify-center">
 						<button
 							onclick={demonstrateRendering}
-							class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow"
+							disabled={isAnimating}
+							class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
