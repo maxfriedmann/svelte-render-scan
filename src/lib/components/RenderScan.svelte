@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Eye from 'lucide-svelte/icons/eye';
+	import Eye from '$lib/components/Logo.svelte';
 	import RenderScanObserver from './RenderScanObserver.svelte';
 
 	// Props with defaults

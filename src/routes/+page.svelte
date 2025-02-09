@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Eye from 'lucide-svelte/icons/eye';
+	import Eye from '$lib/components/Logo.svelte';
 	import pkg from '../../package.json' assert { type: 'json' };
 	import RenderScan from '$lib/components/RenderScan.svelte';
 
