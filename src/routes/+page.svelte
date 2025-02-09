@@ -232,6 +232,7 @@
 
 	<section class="mt-10">
 		<p class="mb-4 text-xl font-bold">SvelteKit</p>
+		<p class="mb-4">Add to your root +layout.svelte file to enable the component in all pages:</p>
 		<pre class="language-html"><code class="language-html">{demoSvelteKitCode}</code></pre>
 	</section>
 
