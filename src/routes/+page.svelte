@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import pkg from '../../package.json';
 	import RenderScan from '$lib/components/RenderScan.svelte';
+	import RenderScanOverlay from '$lib/components/RenderScanOverlay.svelte';
 
 	onMount(() => {
 		mounted = true;
@@ -135,7 +136,7 @@
 							<div
 								class="h-16 w-16 rounded-lg transition-all duration-300"
 								style="background-color: {highlightColor}"
-							/>
+							></div>
 						{/each}
 					</div>
 				</div>
@@ -206,6 +207,8 @@
 	<p class="text-center text-gray-500">
 		© {new Date().getFullYear()} svelte-render-scan · Version {pkg.version}
 	</p>
+
+	<RenderScanOverlay />
 </div>
 
 <style lang="postcss">
