@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Eye from 'lucide-svelte/icons/eye';
-	import RenderScanChecker from './RenderScanChecker.svelte';
+	import RenderScanObserver from './RenderScanObserver.svelte';
 
 	// Props with defaults
 	let { initialEnabled = true, offsetLeft = 0 } = $props<{
@@ -17,7 +17,7 @@
 </script>
 
 {#if enabled}
-	<RenderScanChecker />
+	<RenderScanObserver />
 {/if}
 
 <!-- Floating button -->
