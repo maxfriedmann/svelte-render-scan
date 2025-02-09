@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Eye } from 'lucide-svelte';
+	import Eye from 'lucide-svelte/icons/eye';
 	import RenderScanChecker from './RenderScanChecker.svelte';
 
 	// Props with defaults

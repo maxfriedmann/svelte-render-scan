@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Eye } from 'lucide-svelte';
+	import Eye from 'lucide-svelte/icons/eye';
 	import pkg from '../../package.json';
 	import RenderScan from '$lib/components/RenderScan.svelte';
 
@@ -163,7 +163,7 @@
 							<div
 								class="h-16 w-16 rounded-lg transition-all duration-300"
 								style="background-color: {highlightColor}"
-							/>
+							></div>
 						{/each}
 					</div>
 				</div>
