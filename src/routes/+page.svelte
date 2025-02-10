@@ -122,7 +122,7 @@
 			</div>
 		</div>
 		<h1 class="text-3xl font-bold md:text-5xl">Visual debugging for Svelte apps</h1>
-		<p class="mt-10 max-w-prose text-lg md:text-xl">
+		<p class="mt-10 mxy-4 max-w-prose text-lg md:text-xl">
 			Watch your components update in real-time. Perfect for debugging reactivity and performance
 			issues.
 		</p>
@@ -177,7 +177,7 @@
 			</div>
 		</div>
 
-		<div class="mt-10 grid grid-cols-3 gap-4 self-stretch font-medium">
+		<div class="mt-10 grid grid-cols-1 gap-4 self-stretch font-medium sm:grid-cols-3">
 			{#each ['Track DOM Updates', 'Debug Re-renders', 'Visual Feedback'] as feature}
 				<div class="flex space-x-2 text-left">
 					<svg
@@ -198,7 +198,7 @@
 	</div>
 </div>
 
-<div class="container mx-auto max-w-2xl py-10">
+<div class="container mx-auto max-w-2xl px-4 py-10">
 	<section>
 		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 			<p class="text-xl font-bold">Install</p>
@@ -223,9 +223,7 @@
 		</div>
 		{#each installers as i}
 			<div class:hidden={installer !== i.name}>
-				<code class="language-shell">
-					{i.cmd}
-				</code>
+				<div class="code-block">{i.cmd}</div>
 			</div>
 		{/each}
 	</section>
@@ -233,12 +231,12 @@
 	<section class="mt-10">
 		<p class="mb-4 text-xl font-bold">SvelteKit</p>
 		<p class="mb-4">Add to your root +layout.svelte file to enable the component in all pages:</p>
-		<pre class="language-html"><code class="language-html">{demoSvelteKitCode}</code></pre>
+		<div class="code-block">{demoSvelteKitCode}</div>
 	</section>
 
 	<section class="mt-10">
 		<p class="mb-4 text-xl font-bold">Vanilla Svelte</p>
-		<pre class="language-html"><code class="language-html">{demoCode}</code></pre>
+		<div class="code-block">{demoCode}</div>
 	</section>
 
 	<section class="mt-16">
@@ -248,7 +246,7 @@
 			<div>
 				<h3 class="mb-2 font-bold">Start Disabled</h3>
 				<p class="mb-3 text-gray-600">Start with render scanning disabled by default:</p>
-				<pre class="language-html"><code class="language-html">{advancedCode.disable}</code></pre>
+				<div class="code-block">{advancedCode.disable}</div>
 			</div>
 
 			<div>
@@ -256,13 +254,13 @@
 				<p class="mb-3 text-gray-600">
 					Move the button left to avoid overlapping with other UI elements:
 				</p>
-				<pre class="language-html"><code class="language-html">{advancedCode.offset}</code></pre>
+				<div class="code-block">{advancedCode.offset}</div>
 			</div>
 
 			<div>
 				<h3 class="mb-2 font-bold">Combined Props</h3>
 				<p class="mb-3 text-gray-600">Use multiple props together:</p>
-				<pre class="language-html"><code class="language-html">{advancedCode.combined}</code></pre>
+				<div class="code-block">{advancedCode.combined}</div>
 			</div>
 		</div>
 	</section>
@@ -280,9 +278,8 @@
 </div>
 
 <style lang="postcss">
-	:not(pre) > code,
-	pre {
-		@apply block rounded-lg bg-gray-100 p-5;
+	.code-block {
+		@apply block w-full overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-gray-100 p-5 font-mono text-sm;
 	}
 
 	input[type='radio'] {
