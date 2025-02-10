@@ -27,12 +27,14 @@
 		}
 
 		get title() {
-			let reasons = [...this.#reasons.entries()]
+			// Get entries once and use them for both the reasons string and total
+			const entries = [...this.#reasons.entries()];
+			const reasons = entries
 				.map(([key, count]) => `${key} (${count})`)
 				.join(' , ');
-			let total = 0;
-
-			this.#reasons.values().forEach((x) => (total += x));
+			
+			// Calculate total using the same entries array
+			const total = entries.reduce((sum, [_, count]) => sum + count, 0);
 
 			return `x${total} | ${reasons}`;
 		}
