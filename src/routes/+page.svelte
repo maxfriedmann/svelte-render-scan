@@ -122,7 +122,7 @@
 			</div>
 		</div>
 		<h1 class="text-3xl font-bold md:text-5xl">Visual debugging for Svelte apps</h1>
-		<p class="mxy-4 mt-10 max-w-prose text-lg md:text-xl">
+		<p class="mxy-4 mt-10 max-w-prose px-4 py-2 text-lg md:text-xl">
 			Watch your components update in real-time. Perfect for debugging reactivity and performance
 			issues.
 		</p>
@@ -181,7 +181,9 @@
 
 		<div class="mt-10 grid grid-cols-1 gap-4 self-stretch font-medium sm:grid-cols-3">
 			{#each ['Track DOM Updates', 'Debug Re-renders', 'Visual Feedback'] as feature}
-				<div class="flex space-x-2 text-left">
+				<div
+					class="flex items-center justify-center space-x-2 text-center sm:justify-start sm:text-left"
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
