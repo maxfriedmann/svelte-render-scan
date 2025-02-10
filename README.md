@@ -28,6 +28,7 @@ The overlay button appears in the bottom right corner and is enabled by default.
 
 - `initialEnabled` (default: `true`) - Start with render scanning enabled
 - `offsetLeft` (default: `0`) - Offset the button left from its default position
+- `hideIcon` (default: `false`) - Hide the render scan button while keeping functionality active
 
 ## Development
 

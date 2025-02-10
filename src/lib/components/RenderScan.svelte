@@ -4,9 +4,14 @@
 	import { onMount } from 'svelte';
 
 	// Props with defaults
-	let { initialEnabled = true, offsetLeft = 0 } = $props<{
+	let {
+		initialEnabled = true,
+		offsetLeft = 0,
+		hideIcon = false
+	} = $props<{
 		initialEnabled?: boolean;
 		offsetLeft?: number;
+		hideIcon?: boolean;
 	}>();
 
 	// State management
@@ -36,16 +41,18 @@
 {/if}
 
 <!-- Floating button -->
-<button
-	style:background-color={enabled ? enabledColor : disabledColor}
-	style:right={`calc(1rem + ${offsetLeft}px)`}
-	onclick={toggleEnabled}
-	title={enabled ? 'Disable render scanning' : 'Enable render scanning'}
->
-	<div class:enabled>
-		<Eye color="white" size={24} />
-	</div>
-</button>
+{#if !hideIcon}
+	<button
+		style:background-color={enabled ? enabledColor : disabledColor}
+		style:right={`calc(1rem + ${offsetLeft}px)`}
+		onclick={toggleEnabled}
+		title={enabled ? 'Disable render scanning' : 'Enable render scanning'}
+	>
+		<div class:enabled>
+			<Eye color="white" size={24} />
+		</div>
+	</button>
+{/if}
 
 <style>
 	button {

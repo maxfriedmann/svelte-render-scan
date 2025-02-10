@@ -122,7 +122,7 @@
 			</div>
 		</div>
 		<h1 class="text-3xl font-bold md:text-5xl">Visual debugging for Svelte apps</h1>
-		<p class="mt-10 mxy-4 max-w-prose text-lg md:text-xl">
+		<p class="mxy-4 mt-10 max-w-prose text-lg md:text-xl">
 			Watch your components update in real-time. Perfect for debugging reactivity and performance
 			issues.
 		</p>
@@ -257,6 +257,14 @@
 					Move the button left to avoid overlapping with other UI elements:
 				</p>
 				<div class="code-block">{advancedCode.offset}</div>
+			</div>
+
+			<div>
+				<h3 class="mb-2 font-bold">Hide Icon</h3>
+				<p class="mb-3 text-gray-600">
+					Hide the render scan button while keeping functionality active:
+				</p>
+				<div class="code-block">{`<RenderScan hideIcon={true} />`}</div>
 			</div>
 
 			<div>
