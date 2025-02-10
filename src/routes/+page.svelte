@@ -128,50 +128,52 @@
 		</p>
 
 		<!-- Interactive Demo Section -->
-		<div class="mt-10 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-			<h2 class="mb-4 text-lg font-bold">See DOM Updates Live</h2>
-			<p class="mb-6 italic text-gray-600">
-				Try switching the highlight colors on this page below!
-			</p>
+		<div class="px-4 sm:px-0">
+			<div class="mt-10 w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+				<h2 class="mb-4 text-lg font-bold">See DOM Updates Live</h2>
+				<p class="mb-6 italic text-gray-600">
+					Try switching the highlight colors on this page below!
+				</p>
 
-			<div class="space-y-6">
-				<!-- Color Picker -->
-				<div class="flex items-center justify-between">
-					<label for="highlight-color" class="font-medium">Page Highlight Color</label>
-					<input type="color" id="highlight-color" bind:value={highlightColor} class="h-8 w-12" />
-				</div>
-
-				<!-- Demo Section -->
-				<div class="space-y-4">
-					<div class="flex justify-center">
-						<button
-							onclick={demonstrateRendering}
-							disabled={isAnimating}
-							class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								viewBox="0 0 20 20"
-								fill="currentColor"
-							>
-								<path
-									fill-rule="evenodd"
-									d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
-									clip-rule="evenodd"
-								/>
-							</svg>
-							<span>See it in action</span>
-						</button>
+				<div class="space-y-6">
+					<!-- Color Picker -->
+					<div class="flex items-center justify-between">
+						<label for="highlight-color" class="font-medium">Page Highlight Color</label>
+						<input type="color" id="highlight-color" bind:value={highlightColor} class="h-8 w-12" />
 					</div>
-					<!-- Demo Boxes -->
-					<div class="flex justify-center space-x-4">
-						{#each boxes as box (box)}
-							<div
-								class="h-16 w-16 rounded-lg transition-all duration-300"
-								style="background-color: {highlightColor}"
-							></div>
-						{/each}
+
+					<!-- Demo Section -->
+					<div class="space-y-4">
+						<div class="flex justify-center">
+							<button
+								onclick={demonstrateRendering}
+								disabled={isAnimating}
+								class="flex items-center space-x-2 rounded-xl border-2 border-amber-400 bg-amber-300 px-5 py-2 text-lg font-bold shadow transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="h-5 w-5"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+								>
+									<path
+										fill-rule="evenodd"
+										d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+								<span>See it in action</span>
+							</button>
+						</div>
+						<!-- Demo Boxes -->
+						<div class="flex justify-center space-x-4">
+							{#each boxes as box (box)}
+								<div
+									class="h-16 w-16 rounded-lg transition-all duration-300"
+									style="background-color: {highlightColor}"
+								></div>
+							{/each}
+						</div>
 					</div>
 				</div>
 			</div>
