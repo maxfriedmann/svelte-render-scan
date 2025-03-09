@@ -2,3 +2,4 @@
 .prettier*
 eslint*
 postcss*
+docs
