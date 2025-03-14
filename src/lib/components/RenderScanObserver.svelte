@@ -29,10 +29,8 @@
 		get title() {
 			// Get entries once and use them for both the reasons string and total
 			const entries = [...this.#reasons.entries()];
-			const reasons = entries
-				.map(([key, count]) => `${key} (${count})`)
-				.join(' , ');
-			
+			const reasons = entries.map(([key, count]) => `${key} (${count})`).join(' , ');
+
 			// Calculate total using the same entries array
 			const total = entries.reduce((sum, [_, count]) => sum + count, 0);
 
@@ -94,7 +92,7 @@
 						this.#element.remove();
 						activeHighlights.delete(this);
 					}, 250); // Match the CSS transition duration
-				}, 1000);
+				}, duration);
 			});
 		}
 
@@ -128,6 +126,12 @@
 			};
 		}
 	}
+
+	// Props with defaults
+	let { duration = 1000, callback = undefined } = $props<{
+		duration: number;
+		callback: (mutation: MutationRecord) => void;
+	}>();
 
 	let overlayEl: HTMLDivElement | null = null;
 	let mutationObserver: MutationObserver | null = null;
@@ -185,6 +189,7 @@
 					default:
 						console.log(`Unhandled mutation type: ${mutation.type}`);
 				}
+				if (callback) callback(mutation);
 			}
 		});
 

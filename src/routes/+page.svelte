@@ -83,6 +83,12 @@
   offsetLeft={60}
 />`
 	};
+	// Callback usage code snippet
+	const callbackCode = `function customCallback(mutation: MutationRecord) {
+	// Custom code...
+}
+
+<RenderScan callback={customCallback} />`;
 </script>
 
 <div class="border-b-4 bg-[#faf6f4] py-12">
@@ -267,6 +273,22 @@
 					Hide the render scan button while keeping functionality active:
 				</p>
 				<div class="code-block">{`<RenderScan hideIcon={true} />`}</div>
+			</div>
+
+			<div>
+				<h3 class="mb-2 font-bold">Highlight Duration</h3>
+				<p class="mb-3 text-gray-600">
+					Adjust how long the render scan highlights remain on screen (default=1000):
+				</p>
+				<div class="code-block">{`<RenderScan duration={2000} />`}</div>
+			</div>
+
+			<div>
+				<h3 class="mb-2 font-bold">Callback Function</h3>
+				<p class="mb-3 text-gray-600">
+					Optional user defined function that gets called once per valid mutation:
+				</p>
+				<div class="code-block">{callbackCode}</div>
 			</div>
 
 			<div>

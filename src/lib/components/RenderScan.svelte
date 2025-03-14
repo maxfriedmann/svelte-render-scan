@@ -7,11 +7,15 @@
 	let {
 		initialEnabled = true,
 		offsetLeft = 0,
-		hideIcon = false
+		hideIcon = false,
+		callback = undefined,
+		duration = 1000
 	} = $props<{
 		initialEnabled?: boolean;
 		offsetLeft?: number;
 		hideIcon?: boolean;
+		callback?: (mutationRecord: MutationRecord) => void;
+		duration?: number;
 	}>();
 
 	// State management
@@ -37,7 +41,7 @@
 </script>
 
 {#if enabled}
-	<RenderScanObserver />
+	<RenderScanObserver {callback} {duration} />
 {/if}
 
 <!-- Floating button -->
