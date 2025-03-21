@@ -307,7 +307,7 @@
 	</p>
 
 	{#if mounted}
-		<RenderScan />
+		<RenderScan callback={(m) => console.debug('Mutation observed!', m.type)} duration={1000} />
 	{/if}
 </div>
 
