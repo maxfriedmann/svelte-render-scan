@@ -83,6 +83,12 @@
   offsetLeft={60}
 />`
 	};
+	// Callback usage code snippet
+	const callbackCode = `function customCallback(mutation: MutationRecord) {
+	// Custom code...
+}
+
+<RenderScan callback={customCallback} />`;
 </script>
 
 <div class="border-b-4 bg-[#faf6f4] py-12">
@@ -270,6 +276,22 @@
 			</div>
 
 			<div>
+				<h3 class="mb-2 font-bold">Highlight Duration</h3>
+				<p class="mb-3 text-gray-600">
+					Adjust how long the render scan highlights remain on screen (default=1000):
+				</p>
+				<div class="code-block">{`<RenderScan duration={2000} />`}</div>
+			</div>
+
+			<div>
+				<h3 class="mb-2 font-bold">Callback Function</h3>
+				<p class="mb-3 text-gray-600">
+					Optional user defined function that gets called once per valid mutation:
+				</p>
+				<div class="code-block">{callbackCode}</div>
+			</div>
+
+			<div>
 				<h3 class="mb-2 font-bold">Combined Props</h3>
 				<p class="mb-3 text-gray-600">Use multiple props together:</p>
 				<div class="code-block">{advancedCode.combined}</div>
@@ -285,7 +307,7 @@
 	</p>
 
 	{#if mounted}
-		<RenderScan />
+		<RenderScan callback={(m) => console.debug('Mutation observed!', m.type)} duration={1000} />
 	{/if}
 </div>
 

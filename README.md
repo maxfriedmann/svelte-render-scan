@@ -29,6 +29,8 @@ The overlay button appears in the bottom right corner and is enabled by default.
 - `initialEnabled` (default: `true`) - Start with render scanning enabled
 - `offsetLeft` (default: `0`) - Offset the button left from its default position
 - `hideIcon` (default: `false`) - Hide the render scan button while keeping functionality active
+- `callback` (default: `undefined`) - Optional user defined function that gets called once per valid mutation. Signature is `(mutation:MutationRecord)=>void;`
+- `duration` (defult: `1000`) - Adjust how long the render scan highlights remain on screen in ms
 
 ## Development
 
