@@ -107,6 +107,8 @@
 			/>
 		</div>
 
+		<i class="fa-solid fa-eye" style="font-size:150px;padding: 50px"></i>
+
 		<div
 			class="mb-10 flex flex-col items-center space-y-3 text-white md:flex-row md:space-x-3 md:space-y-0"
 		>

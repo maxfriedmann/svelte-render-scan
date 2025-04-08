@@ -25,6 +25,9 @@
 	<meta property="twitter:title" content="Svelte Render Scan" />
 	<meta property="twitter:description" content="Visual debugging for Svelte apps." />
 	<meta property="twitter:image" content={`${SITE_URL}/og-image.png`} />
+
+	<!-- Fontawesome -->
+	<script src="https://kit.fontawesome.com/785bc55deb.js" crossorigin="anonymous"></script>
 </svelte:head>
 
 {@render children()}
